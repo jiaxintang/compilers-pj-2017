@@ -6,7 +6,7 @@ fragment Digits :   Digit*;
 fragment Letter :   [a-zA_Z];
 fragment Letters    :   Letter*;
 fragment LetterOrDigit  :   [a-zA-Z0-9$_];
-Identifier  :   Letter LetterOrDigit*
+Identifier  :   Letter LetterOrDigit*;
 
 
 
