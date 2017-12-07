@@ -3,10 +3,11 @@ grammar MiniJava;
 // lexer
 fragment Digit :    [0-9];
 fragment Digits :   Digit*;
-fragment Letter :   [a-zA_Z];
+fragment Letter :   [a-zA-Z];
 fragment Letters    :   Letter*;
 fragment LetterOrDigit  :   [a-zA-Z0-9$_];
 Identifier  :   Letter LetterOrDigit*;
+IntegerLiteral  :   Digits;
 
 WS  :   [ \r\t\n]+ -> skip;
 
@@ -40,7 +41,7 @@ expression  :   expression (AND | LT | PLUS | MINUS | TIMES) expression
               | expression '[' expression ']'
               | expression '.' 'length'
               | expression '.' Identifier LP ( expression (',' expression )* )? RP
-              | <INTERGER_LITERAL>
+              | IntegerLiteral
               | 'true'
               | 'false'
               | Identifier
