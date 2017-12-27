@@ -32,11 +32,11 @@ type :
 
 statement : 
 	'{' ( statement )* '}'
-	|'if' '(' extendexp ')' statement 'else' statement
-	|'while' '(' extendexp ')' statement
-	|'System.out.println' '(' extendexp ')' ';'
-	|identifier '=' extendexp ';'
-	|identifier '[' extendexp ']' '=' extendexp ';' 
+	|'if' '(' expression ')' statement 'else' statement
+	|'while' '(' expression ')' statement
+	|'System.out.println' '(' expression ')' ';'
+	|identifier '=' expression ';'
+	|identifier '[' expression ']' '=' expression ';' 
 	;
 
 extendexp : 
@@ -46,12 +46,11 @@ extendexp :
 	;
 
 expression : 
-	expression ('&&'|'<') expression   
-	| expression ('*'|'/') expression
-	| expression ('+'|'-') expression
+	expression ('&&'|'<'|'+'|'-'|'*') expression   
 	| expression '[' expression ']'
 	| expression '.' 'length'
 	| expression '.' identifier '(' ( expression ( ',' expression )* )? ')'
+	| INTEGER_LITERAL
 	| 'true'
 	| 'false'
 	| identifier
@@ -60,14 +59,10 @@ expression :
 	| 'new' identifier '(' ')'
 	| '!' expression
 	| '(' expression ')'
-	| INT
-	| STR		
-	| '(' expression ')'
 	;
 
 identifier : 
 	ID
-	|WRONG {notifyErrorListeners("Wrong ID");}
 	;
 
 
