@@ -50,7 +50,7 @@ expression :
 	| expression '[' expression ']'
 	| expression '.' 'length'
 	| expression '.' identifier '(' ( expression ( ',' expression )* )? ')'
-	| INTEGER_LITERAL
+	| INT
 	| 'true'
 	| 'false'
 	| identifier
@@ -65,14 +65,12 @@ identifier :
 	ID
 	;
 
+LINE_COMMENT : '//' .*? '\r'? '\n' -> skip;
+COMMENT : '/*' .*? '*/' -> skip;
+WS : [ \t\r\n]+ -> skip;
 
-ID:[a-zA-Z][a-zA-Z0-9_]*;
-INT: [0-9]+;
-WRONG:[0-9][a-zA-Z0-9_]*;
-STR: '"' .*? '"';
-WS: [ \t\r\n]+ -> skip;
-COMMENT
-	: '/*' .*? '*/' -> skip;
-LINE_COMMENT
-	: '//' .*? '\r'? '\n' -> skip;
+ID : [a-zA-Z][a-zA-Z0-9_]*;
+INT : [0-9]+;
+OPERATOR : (&&)|<|\+|-|\*
+WRONG : [0-9][a-zA-Z0-9_]*;
 
