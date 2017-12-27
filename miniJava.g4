@@ -1,70 +1,74 @@
 grammar miniJava;
 
-goal: mainClass classDeclaration+;
+goal: mainClass (classDeclaration)*;
 
-mainClass
-    : 'class' identifier '{' 
-    'public' 'static' 'void' 'main' '(' 'String' '[' ']' ID ')' '{' statement '}' '}' 
-    ;
+mainClass :
+	'class' identifier '{' 
+	'public' 'static' 'void' 'main' '(' 'String' '[' ']' identifier ')' '{' statement '}' '}' 
+	;
 
-classDeclaration
-    : 'class' identifier 
-    ( 'extends' identifier )? 
-    '{' ( varDeclaration )* ( methodDeclaration )* '}' ;
+classDeclaration :
+	'class' identifier 
+	( 'extends' identifier )? 
+	'{' ( varDeclaration )* ( methodDeclaration )* '}'
+	;
 
-varDeclaration
-    : type identifier ';'  
-    ;
+varDeclaration :
+	type identifier ';' 
+	;
 
-methodDeclaration
-    : 'public' type identifier 
-    '(' ( type identifier ( ',' type identifier )* )? ')' '{' ( varDeclaration )* ( statement )* 'return' extendexp ';' '}' ;
+methodDeclaration :
+	'public' type identifier 
+	'(' ( type identifier ( ',' type identifier )* )? ')' 
+	'{' ( varDeclaration )* ( statement )* 'return' expression ';' '}' 
+	;
 
-type
-    : 'int' '['']'
-    |'boolean'
+type : 
+	'int' '['']'
+	|'boolean'
 	|'int'
-	|identifier ;
+	|identifier 
+	;
 
-statement
-    : '{' ( statement )* '}'
+statement : 
+	'{' ( statement )* '}'
 	|'if' '(' extendexp ')' statement 'else' statement
 	|'while' '(' extendexp ')' statement
 	|'System.out.println' '(' extendexp ')' ';'
 	|identifier '=' extendexp ';'
 	|identifier '[' extendexp ']' '=' extendexp ';' 
-    ;
+	;
 
-extendexp
-    :expression
-    |expression ')' {notifyErrorListeners("too many ')'");}
-    |'(' expression {notifyErrorListeners("too many '('");}
-    ;
+extendexp : 
+	expression
+	|expression ')' {notifyErrorListeners("too many ')'");}
+	|'(' expression {notifyErrorListeners("too many '('");}
+	;
 
-expression
-    : expression ('&&'|'<') expression   
-        | expression ('*'|'/') expression
-        | expression ('+'|'-') expression
-        | expression '[' expression ']'
-        | expression '.' 'length'
-        | expression '.' identifier '(' ( expression ( ',' expression )* )? ')'
-        | 'true'
-        | 'false'
-        | identifier
-        | 'this'
-        | 'new' 'int' '[' expression ']'
-        | 'new' identifier '(' ')'
-        | '!' expression
-        | '(' expression ')'
-        | INT
-        | STR        
-        | '(' expression ')'
-        ;
+expression : 
+	expression ('&&'|'<') expression   
+	| expression ('*'|'/') expression
+	| expression ('+'|'-') expression
+	| expression '[' expression ']'
+	| expression '.' 'length'
+	| expression '.' identifier '(' ( expression ( ',' expression )* )? ')'
+	| 'true'
+	| 'false'
+	| identifier
+	| 'this'
+	| 'new' 'int' '[' expression ']'
+	| 'new' identifier '(' ')'
+	| '!' expression
+	| '(' expression ')'
+	| INT
+	| STR		
+	| '(' expression ')'
+	;
 
-identifier
-    :ID
-    |WRONG {notifyErrorListeners("Wrong ID");}
-    ;
+identifier : 
+	ID
+	|WRONG {notifyErrorListeners("Wrong ID");}
+	;
 
 
 ID:[a-zA-Z][a-zA-Z0-9_]*;
@@ -73,7 +77,7 @@ WRONG:[0-9][a-zA-Z0-9_]*;
 STR: '"' .*? '"';
 WS: [ \t\r\n]+ -> skip;
 COMMENT
-    : '/*' .*? '*/' -> skip;
+	: '/*' .*? '*/' -> skip;
 LINE_COMMENT
-    : '//' .*? '\r'? '\n' -> skip;
+	: '//' .*? '\r'? '\n' -> skip;
 
