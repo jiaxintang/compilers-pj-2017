@@ -6,8 +6,9 @@ class Wrong{
 
 class Fuck {
 	public int Haha(int num) {
-		n$;
-		return num;
+		int n;
+		int n;
+		return m;
 	}
 
 }

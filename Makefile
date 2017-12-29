@@ -6,7 +6,7 @@ PROG=goal
 EXPR=test.expr
 antlr4=java -jar /usr/local/lib/antlr-4.7.1-complete.jar
 grun=java org.antlr.v4.gui.TestRig
-TESTFILE = ./test/BinarySearch.java
+TESTFILE = test/BinarySearch.java
 
 
 run: $(CLASSFILE)
