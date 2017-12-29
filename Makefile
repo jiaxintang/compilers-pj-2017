@@ -6,6 +6,7 @@ PROG=goal
 EXPR=test.expr
 antlr4=java -jar /usr/local/lib/antlr-4.7.1-complete.jar
 grun=java org.antlr.v4.gui.TestRig
+TESTFILE = ./test/BinarySearch.java
 
 
 run: $(CLASSFILE)
@@ -15,7 +16,10 @@ runx: $(CLASSFILE)
 	$(grun) $(TASK) $(PROG) $(EXPR) -gui
 
 test: $(CLASSFILE)
-	$(grun) $(TASK) $(PROG) ./test/Factorial.java -gui
+	$(grun) $(TASK) $(PROG) $(TESTFILE) -gui
+
+testx: $(CLASSFILE)
+	$(grun) $(TASK) $(PROG) ./test/Wrong.java -gui
 
 $(CLASSFILE): $(JAVAFILE)
 	javac $(TASK)*.java
