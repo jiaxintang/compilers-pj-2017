@@ -73,4 +73,4 @@ ID : [a-zA-Z][a-zA-Z0-9_]*;
 INT : [0-9]+;
 WRONG_INT : [0-9][^ \t\r\n]+;
 WRONG_ID : [a-zA-Z][^ \t\r\n]+;
-UNAVALIABLE : .+;
+UNAVALIABLE : .+?;
