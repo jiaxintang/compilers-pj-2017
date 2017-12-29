@@ -14,6 +14,9 @@ run: $(CLASSFILE)
 runx: $(CLASSFILE)
 	$(grun) $(TASK) $(PROG) $(EXPR) -gui
 
+test: $(CLASSFILE)
+	$(grun) $(TASK) $(PROG) ./test/Factorial.java -gui
+
 $(CLASSFILE): $(JAVAFILE)
 	javac $(TASK)*.java
 
@@ -25,6 +28,6 @@ gen: $(SRC)
 
 .PHONY: clean
 clean:
-	-@rm -rf $(CLASSFILE) $(JAVAFILE) *.tokens
+	-@rm -rf $(CLASSFILE) $(JAVAFILE) *.tokens *.interp
 
 
