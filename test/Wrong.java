@@ -8,6 +8,7 @@ class Fuck {
 	public int Haha(int num) {
 		int n;
 		int n;
+		1 + 2 * c[2];
 		return m;
 	}
 

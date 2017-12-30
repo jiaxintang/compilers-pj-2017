@@ -7,16 +7,17 @@ EXPR=test.expr
 antlr4=java -jar /usr/local/lib/antlr-4.7.1-complete.jar
 grun=java org.antlr.v4.gui.TestRig
 TESTFILE = test.java
+CONFIG = -no-listener -visitor
 
 
 run: $(CLASSFILE)
-	$(grun) $(TASK) $(PROG) $(EXPR)
+	$(grun) $(CONFIG) $(TASK) $(PROG) $(EXPR)
 
 runx: $(CLASSFILE)
-	$(grun) $(TASK) $(PROG) $(EXPR) -gui
+	$(grun) $(CONFIG) $(TASK) $(PROG) $(EXPR) -gui
 
 tes: $(CLASSFILE)
-	$(grun) $(TASK) $(PROG) $(TESTFILE) -gui
+	$(grun) $(CONFIG) $(TASK) $(PROG) $(TESTFILE) -gui
 
 $(CLASSFILE): $(JAVAFILE)
 	javac $(TASK)*.java

@@ -36,29 +36,30 @@ type
 	;
 
 statement
-	:'{' ( statement )* '}'
-	|'if' '(' expression ')' statement 'else' statement
-	|'while' '(' expression ')' statement
-	|'System.out.println' '(' expression ')' ';'
-	|ID '=' expression ';'
-	|ID '[' expression ']' '=' expression ';' 
+	:'{' ( statement )* '}'												#block
+	|'if' '(' expression ')' statement 'else' statement					#select
+	|'while' '(' expression ')' statement								#while
+	|'System.out.println' '(' expression ')' ';'						#output
+	|ID '=' expression ';'												#assign
+	|ID '[' expression ']' '=' expression ';' 							#arrayAssign
 	;
 
 expression
-	: expression ('.' 'length' | '.' ID '(' ( expression ( ',' expression )* )? ')' | '[' expression ']')
-	| expression '*' expression   
-	| expression ('+' | '-') expression
-	| expression '<' expression
-	| expression '&&' expression
-	| INT
-	| 'true'
-	| 'false'
-	| ID
-	| 'this'
-	| 'new' 'int' '[' expression ']'
-	| 'new' ID '(' ')'
-	| '!' expression
-	| '(' expression ')'
+	:expression '.' ID '(' ( expression ( ',' expression )* )? ')'		#method
+	|expression '.' 'length'											#length
+	|expression '[' expression ']'										#access
+	|expression '*' expression											#mul
+	|expression ('+' | '-') expression									#addSub
+	|expression '<' expression											#LT
+	|expression '&&' expression											#and
+	|INT																#int
+	|('true' | 'false')													#bool
+	|ID																	#id
+	|'this'																#this
+	|'new' 'int' '[' expression ']'										#newInt
+	|'new' ID '(' ')'													#newId
+	|'!' expression														#not
+	|'(' expression ')'													#paren
 	;
 
 
