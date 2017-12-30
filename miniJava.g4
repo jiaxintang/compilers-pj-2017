@@ -45,7 +45,10 @@ statement
 	;
 
 expression
-	: expression ('&&'|'<'|'+'|'-'|'*') expression   
+	: expression '*' expression   
+	| expression ('+' | '-') expression
+	| expression '<' expression
+	| expression '&&' expression
 	| expression '[' expression ']'
 	| expression '.' 'length'
 	| expression '.' identifier '(' ( expression ( ',' expression )* )? ')'
@@ -58,17 +61,6 @@ expression
 	| 'new' identifier '(' ')'
 	| '!' expression
 	| '(' expression ')'
-	| '(' error ')'
-	;
-
-expressions
-	: expression
-	| expressions ';' expression
-	| error ';' expression
-	;
-
-error
-	: UNAVALIABLE
 	;
 
 identifier

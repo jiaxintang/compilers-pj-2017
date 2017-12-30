@@ -15,11 +15,8 @@ run: $(CLASSFILE)
 runx: $(CLASSFILE)
 	$(grun) $(TASK) $(PROG) $(EXPR) -gui
 
-test: $(CLASSFILE)
+tes: $(CLASSFILE)
 	$(grun) $(TASK) $(PROG) $(TESTFILE) -gui
-
-testx: $(CLASSFILE)
-	$(grun) $(TASK) $(PROG) ./test/Wrong.java -gui
 
 $(CLASSFILE): $(JAVAFILE)
 	javac $(TASK)*.java
