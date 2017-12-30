@@ -106,18 +106,6 @@ public class miniJavaBaseListener implements miniJavaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpression(miniJavaParser.ExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterIdentifier(miniJavaParser.IdentifierContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIdentifier(miniJavaParser.IdentifierContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
