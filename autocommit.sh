@@ -3,5 +3,5 @@ while true
 do
 	git add .
 	git commit -m "autocommit"
-	sleep 1200
+	sleep 3600
 done
