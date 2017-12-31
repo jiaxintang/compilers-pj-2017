@@ -8,7 +8,7 @@ class Fuck {
 	public int Haha(int num) {
 		int n;
 		int n;
-		m = 1 + 2 * c[2].length[3].a()[4];
+		m = 1 + 2 * c[2].length.a()[4];
 		return m;
 	}
 

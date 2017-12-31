@@ -69,3 +69,10 @@ WS : [ \t\r\n]+ -> skip;
 
 ID : [a-zA-Z][a-zA-Z0-9_]*;
 INT : [0-9]+;
+FLOAT 
+	: DIGIT+ '.' DIGIT*
+	| '.' DIGIT+
+	；
+
+fragment
+DIGIT : [0-9] ;

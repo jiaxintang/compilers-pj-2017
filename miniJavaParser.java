@@ -107,9 +107,12 @@ public class miniJavaParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_goal; }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitGoal(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterGoal(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitGoal(this);
 		}
 	}
 
@@ -162,9 +165,12 @@ public class miniJavaParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_mainClass; }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitMainClass(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterMainClass(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitMainClass(this);
 		}
 	}
 
@@ -243,9 +249,12 @@ public class miniJavaParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_classDeclaration; }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitClassDeclaration(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterClassDeclaration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitClassDeclaration(this);
 		}
 	}
 
@@ -327,9 +336,12 @@ public class miniJavaParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_varDeclaration; }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitVarDeclaration(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterVarDeclaration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitVarDeclaration(this);
 		}
 	}
 
@@ -389,9 +401,12 @@ public class miniJavaParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_methodDeclaration; }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitMethodDeclaration(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterMethodDeclaration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitMethodDeclaration(this);
 		}
 	}
 
@@ -503,9 +518,12 @@ public class miniJavaParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_type; }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitType(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitType(this);
 		}
 	}
 
@@ -578,9 +596,12 @@ public class miniJavaParser extends Parser {
 		}
 		public OutputContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitOutput(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterOutput(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitOutput(this);
 		}
 	}
 	public static class SelectContext extends StatementContext {
@@ -595,9 +616,12 @@ public class miniJavaParser extends Parser {
 		}
 		public SelectContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitSelect(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterSelect(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitSelect(this);
 		}
 	}
 	public static class ArrayAssignContext extends StatementContext {
@@ -610,9 +634,12 @@ public class miniJavaParser extends Parser {
 		}
 		public ArrayAssignContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitArrayAssign(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterArrayAssign(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitArrayAssign(this);
 		}
 	}
 	public static class BlockContext extends StatementContext {
@@ -624,9 +651,12 @@ public class miniJavaParser extends Parser {
 		}
 		public BlockContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitBlock(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterBlock(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitBlock(this);
 		}
 	}
 	public static class WhileContext extends StatementContext {
@@ -638,9 +668,12 @@ public class miniJavaParser extends Parser {
 		}
 		public WhileContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitWhile(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterWhile(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitWhile(this);
 		}
 	}
 	public static class AssignContext extends StatementContext {
@@ -650,9 +683,12 @@ public class miniJavaParser extends Parser {
 		}
 		public AssignContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitAssign(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterAssign(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitAssign(this);
 		}
 	}
 
@@ -807,17 +843,23 @@ public class miniJavaParser extends Parser {
 		}
 		public AccessContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitAccess(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterAccess(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitAccess(this);
 		}
 	}
 	public static class BoolContext extends ExpressionContext {
 		public BoolContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitBool(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterBool(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitBool(this);
 		}
 	}
 	public static class MethodContext extends ExpressionContext {
@@ -830,9 +872,12 @@ public class miniJavaParser extends Parser {
 		public TerminalNode ID() { return getToken(miniJavaParser.ID, 0); }
 		public MethodContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitMethod(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterMethod(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitMethod(this);
 		}
 	}
 	public static class MulContext extends ExpressionContext {
@@ -844,26 +889,35 @@ public class miniJavaParser extends Parser {
 		}
 		public MulContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitMul(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterMul(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitMul(this);
 		}
 	}
 	public static class NewIdContext extends ExpressionContext {
 		public TerminalNode ID() { return getToken(miniJavaParser.ID, 0); }
 		public NewIdContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitNewId(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterNewId(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitNewId(this);
 		}
 	}
 	public static class ThisContext extends ExpressionContext {
 		public ThisContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitThis(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterThis(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitThis(this);
 		}
 	}
 	public static class LTContext extends ExpressionContext {
@@ -875,9 +929,12 @@ public class miniJavaParser extends Parser {
 		}
 		public LTContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitLT(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterLT(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitLT(this);
 		}
 	}
 	public static class LengthContext extends ExpressionContext {
@@ -886,9 +943,12 @@ public class miniJavaParser extends Parser {
 		}
 		public LengthContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitLength(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterLength(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitLength(this);
 		}
 	}
 	public static class AddSubContext extends ExpressionContext {
@@ -900,18 +960,24 @@ public class miniJavaParser extends Parser {
 		}
 		public AddSubContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitAddSub(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterAddSub(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitAddSub(this);
 		}
 	}
 	public static class IntContext extends ExpressionContext {
 		public TerminalNode INT() { return getToken(miniJavaParser.INT, 0); }
 		public IntContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitInt(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterInt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitInt(this);
 		}
 	}
 	public static class NotContext extends ExpressionContext {
@@ -920,9 +986,12 @@ public class miniJavaParser extends Parser {
 		}
 		public NotContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitNot(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterNot(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitNot(this);
 		}
 	}
 	public static class ParenContext extends ExpressionContext {
@@ -931,9 +1000,12 @@ public class miniJavaParser extends Parser {
 		}
 		public ParenContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitParen(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterParen(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitParen(this);
 		}
 	}
 	public static class NewIntContext extends ExpressionContext {
@@ -942,9 +1014,12 @@ public class miniJavaParser extends Parser {
 		}
 		public NewIntContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitNewInt(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterNewInt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitNewInt(this);
 		}
 	}
 	public static class AndContext extends ExpressionContext {
@@ -956,18 +1031,24 @@ public class miniJavaParser extends Parser {
 		}
 		public AndContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitAnd(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterAnd(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitAnd(this);
 		}
 	}
 	public static class IdContext extends ExpressionContext {
 		public TerminalNode ID() { return getToken(miniJavaParser.ID, 0); }
 		public IdContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof miniJavaVisitor ) return ((miniJavaVisitor<? extends T>)visitor).visitId(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).enterId(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof miniJavaListener ) ((miniJavaListener)listener).exitId(this);
 		}
 	}
 
