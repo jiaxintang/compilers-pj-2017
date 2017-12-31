@@ -51,10 +51,11 @@ expression
 	|expression EXP<assoc=right> expression								#exp
 	|expression MUL expression											#mul
 	|expression (ADD | SUB) expression									#addSub
+	|expression EQ expression											#EQ
 	|expression LT expression											#LT
 	|expression AND expression											#and
 	|INT																#int
-	|('true' | 'false')													#bool
+	|BOOLEAN															#bool
 	|ID																	#id
 	|'this'																#this
 	|'new' 'int' '[' expression ']'										#newInt
@@ -67,6 +68,7 @@ LINE_COMMENT : '//' .*? '\r'? '\n' -> skip;
 COMMENT : '/*' .*? '*/' -> skip;
 WS : [ \t\r\n]+ -> skip;
 
+BOOLEAN : 'true' | 'false' ;
 ID : [a-zA-Z][a-zA-Z0-9_]*;
 INT : [0-9]+;
 FLOAT 
@@ -84,6 +86,7 @@ ESC : '\\"' | '\\\\' ;
 MUL : '*';
 ADD : '+';
 SUB: '-';
+EQ : '==';
 ASSIGN : '=';
 LT : '<';
 AND : '&&';

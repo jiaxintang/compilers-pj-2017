@@ -267,6 +267,18 @@ public class miniJavaBaseListener implements miniJavaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterEQ(miniJavaParser.EQContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEQ(miniJavaParser.EQContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterInt(miniJavaParser.IntContext ctx) { }
 	/**
 	 * {@inheritDoc}

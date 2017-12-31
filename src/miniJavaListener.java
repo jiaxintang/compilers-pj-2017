@@ -247,6 +247,18 @@ public interface miniJavaListener extends ParseTreeListener {
 	 */
 	void exitAddSub(miniJavaParser.AddSubContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code EQ}
+	 * labeled alternative in {@link miniJavaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterEQ(miniJavaParser.EQContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code EQ}
+	 * labeled alternative in {@link miniJavaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitEQ(miniJavaParser.EQContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code int}
 	 * labeled alternative in {@link miniJavaParser#expression}.
 	 * @param ctx the parse tree
