@@ -48,6 +48,7 @@ expression
 	:expression '.' ID '(' ( expression ( ',' expression )* )? ')'		#method
 	|expression '.' 'length'											#length
 	|expression '[' expression ']'										#access
+	|expression '^'<assoc=right> expression								#exp
 	|expression '*' expression											#mul
 	|expression ('+' | '-') expression									#addSub
 	|expression '<' expression											#LT
@@ -73,6 +74,11 @@ FLOAT
 	: DIGIT+ '.' DIGIT*
 	| '.' DIGIT+
 	；
+STRING : '"' (ESC|.)*? '"' ;
 
 fragment
 DIGIT : [0-9] ;
+
+fragment
+END : '\\"' | '\\\\' ;
+
