@@ -3,6 +3,8 @@
 3. 浮点数
 4. 字符串, 避开转义
 5. 指数运算
+6. 编写miniJavaLoader重载miniJavaBaseLisener
+7. 自定义miniJava main
 
 
 TODO:

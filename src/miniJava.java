@@ -18,6 +18,7 @@ class miniJava {
 		// create listener then feed to walker
 		miniJavaLoader loader = new miniJavaLoader();
 		walker.walk(loader, tree);
+		System.out.println("out");
 		System.out.println(loader.props);
 	}
 

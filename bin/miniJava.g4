@@ -4,7 +4,7 @@ goal: mainClass (classDeclaration)*;
 
 mainClass
 	:'class' ID '{' 
-	'public' 'static' 'void' 'main' '(' 'String' '[' ']' ID ')' 
+	'public' 'static' 'void' 'main' LPR 'String' '[' ']' ID RPR 
 	'{' statement '}' 
 	'}' 
 	;
@@ -19,13 +19,13 @@ classDeclaration
 	;
 
 varDeclaration
-	:type ID ';' 
+	:type ID SEMI 
 	;
 
 methodDeclaration
 	:'public' type ID 
-	'(' ( type ID ( ',' type ID )* )? ')' 
-	'{' ( varDeclaration )* ( statement )* 'return' expression ';' '}' 
+	LPR ( type ID ( COMMA type ID )* )? RPR 
+	'{' ( varDeclaration )* ( statement )* 'return' expression SEMI '}' 
 	;
 
 type
@@ -37,30 +37,30 @@ type
 
 statement
 	:'{' ( statement )* '}'												#block
-	|'if' '(' expression ')' statement 'else' statement					#select
-	|'while' '(' expression ')' statement								#while
-	|'System.out.println' '(' expression ')' ';'						#output
-	|ID '=' expression ';'												#assign
-	|ID '[' expression ']' '=' expression ';' 							#arrayAssign
+	|'if' LPR expression RPR statement 'else' statement					#select
+	|'while' LPR expression RPR statement								#while
+	|'System.out.println' LPR expression RPR SEMI						#output
+	|ID ASSIGN expression SEMI											#assign
+	|ID '[' expression ']' ASSIGN expression SEMI 						#arrayAssign
 	;
 
 expression
-	:expression '.' ID '(' ( expression ( ',' expression )* )? ')'		#method
-	|expression '.' 'length'											#length
+	:expression DOT ID LPR ( expression ( COMMA expression )* )? RPR	#method
+	|expression DOT 'length'											#length
 	|expression '[' expression ']'										#access
-	|expression '^'<assoc=right> expression								#exp
-	|expression '*' expression											#mul
-	|expression ('+' | '-') expression									#addSub
-	|expression '<' expression											#LT
-	|expression '&&' expression											#and
+	|expression EXP<assoc=right> expression								#exp
+	|expression MUL expression											#mul
+	|expression (ADD | SUB) expression									#addSub
+	|expression LT expression											#LT
+	|expression AND expression											#and
 	|INT																#int
 	|('true' | 'false')													#bool
 	|ID																	#id
 	|'this'																#this
 	|'new' 'int' '[' expression ']'										#newInt
-	|'new' ID '(' ')'													#newId
+	|'new' ID LPR RPR													#newId
 	|'!' expression														#not
-	|'(' expression ')'													#paren
+	|LPR expression RPR													#paren
 	;
 
 LINE_COMMENT : '//' .*? '\r'? '\n' -> skip;
@@ -70,8 +70,8 @@ WS : [ \t\r\n]+ -> skip;
 ID : [a-zA-Z][a-zA-Z0-9_]*;
 INT : [0-9]+;
 FLOAT 
-	: DIGIT+ '.' DIGIT*
-	| '.' DIGIT+
+	: DIGIT+ DOT DIGIT*
+	| DOT DIGIT+
 	;
 STRING : '"' (ESC|.)*? '"' ;
 
@@ -80,4 +80,18 @@ DIGIT : [0-9] ;
 
 fragment
 ESC : '\\"' | '\\\\' ;
+
+MUL : '*';
+ADD : '+';
+SUB: '-';
+ASSIGN : '=';
+LT : '<';
+AND : '&&';
+LPR : '(';
+RPR : ')';
+SEMI : ';';
+EXP : '^';
+DOT : '.';
+COMMA : ',';
+
 
