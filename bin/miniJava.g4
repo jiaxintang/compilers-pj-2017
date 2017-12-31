@@ -63,7 +63,6 @@ expression
 	|'(' expression ')'													#paren
 	;
 
-
 LINE_COMMENT : '//' .*? '\r'? '\n' -> skip;
 COMMENT : '/*' .*? '*/' -> skip;
 WS : [ \t\r\n]+ -> skip;

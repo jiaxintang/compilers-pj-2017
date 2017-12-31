@@ -14,6 +14,8 @@ TESTFILE = test/test.java
 CONFIG = 
 COMMAND = 
 
+srun:
+	$(compile) $(TASK)*.java;$(xrun) $(TASK) $(TESTFILE)
 
 run: $(CLASSFILE)
 	$(xrun) $(TASK) $(TESTFILE)
@@ -39,7 +41,7 @@ $(CLASSFILE): $(JAVAFILE)
 $(JAVAFILE): $(SRC)
 	$(antlr4) $(SRC)
 
-$(TESTCLASSFILE): $(CLASSFILE)
+$(TESTCLASSFILE): $(TESTFILE)
 	$(compile) Test*.java
 
 gen: $(SRC)
