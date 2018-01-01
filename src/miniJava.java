@@ -36,16 +36,25 @@ class miniJava {
 		//System.out.println("AST : ");
 		//System.out.println(tree.toStringTree(parser));
 
+		List<String> l = new ArrayList<>();
+		l.add("goal");
+		l.add("mainClass");
+		l.add("classDec");
+		l.add("varDec");
+
+
 		//show AST in GUI
 		JFrame frame  = new JFrame("Antlr AST");
 		JPanel panel = new JPanel();
 		//TreeViewer viewer = new TreeViewer(null, tree);
 		//TreeViewer viewer =new TreeViewer(Arrays.asList(
 		//			parser.getRuleNames()), tree);
-		
-		TreeViewer viewer = new TreeViewer(Arrays.asList(
-					parser.getRuleNames()), ast);
-		//TreeViewer viewer = new TreeViewer(null, ast);
+		//TreeViewer viewer = new TreeViewer(Arrays.asList(
+		//			parser.getRuleNames()), ast);
+		//TreeViewer viewer = new TreeViewer(l, ast);
+		TreeViewer viewer = new TreeViewer(null, ast);
+		for (String i : parser.getRuleNames())
+			System.out.println("i : " + i);
 		viewer.setScale(1.5);
 		panel.add(viewer);
 		frame.add(viewer);
