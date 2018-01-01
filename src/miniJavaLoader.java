@@ -5,7 +5,9 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class miniJavaLoader extends miniJavaBaseListener {
-	HashMap<String, String> props = new HashMap<String, String>();
+	ParseTreeProperty<Integer> values = new ParseTreeProperty<Integer>();
+	public void setValue(ParseTree node, int value) { values.put(node, value);}
+	public int getValue(ParseTree node) { return values.get(node);}
 	int deep = 0;
 
 	void common(String name)
@@ -17,6 +19,19 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		deep += 1;
 	}
 	void lv() {deep -= 1;}
+
+	// void : 0
+	// int : 1
+	// float : 2
+	// bool : 3
+	// string : 4
+	boolean check(int left, int right, int exp_left, int exp_right)
+	{
+		if (left != exp_left || right != exp_right)
+			return false;
+		return true;
+	}
+
 	@Override public void enterGoal(miniJavaParser.GoalContext ctx) {common("goal");}
 	@Override public void exitGoal(miniJavaParser.GoalContext ctx) {lv();}
 	@Override public void enterMainClass(miniJavaParser.MainClassContext ctx) { common("mainClass");}
