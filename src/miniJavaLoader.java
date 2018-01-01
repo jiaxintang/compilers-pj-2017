@@ -37,7 +37,9 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		_ARRAYASSIGN=13, _METHOD=14, _LENGTH=15, _ACCESS=16,
 		_EXP=17, _MUL=18, _ADDSUB=19, _EQ=20, _LT=21,
 		_AND=22, _INT=23, _BOOL=24, _ID=25, _THIS=26,
-		_NEWINT=27, _NEWID=28, _NOT=29, _PAREN=30;
+		_NEWINT=27, _NEWID=28, _NOT=29, _PAREN=30,
+		_RETURNEXPR=31, _PARAMETERS=32, _VARDECS=33,
+		_BODY=34, _CONDITION=35;
 
 
 	boolean check(int left, int right, int exp_left, int exp_right)
@@ -52,11 +54,15 @@ public class miniJavaLoader extends miniJavaBaseListener {
 
 	}
 
+	public static class GoalContext2 extends miniJavaParser.GoalContext {
+		@Override public int getRuleIndex() {return _GOAL;}
+		public GoalContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
+	}
 	@Override public void enterGoal(miniJavaParser.GoalContext ctx) {
 		common("goal");
 	}
 	@Override public void exitGoal(miniJavaParser.GoalContext ctx) {
-		ParserRuleContext node = new miniJavaParser.GoalContext(ctx, 0);
+		ParserRuleContext node = new GoalContext2(ctx, 0);
 		node.copyFrom(ctx);
 		node.addChild(vast.get(ctx.mainClass()));
 		for (miniJavaParser.ClassDeclarationContext i: ctx.classDeclaration())
@@ -64,18 +70,27 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.invokingState = _GOAL;
 		ast = node;
 	}
+
+	public static class MainClassContext2 extends miniJavaParser.MainClassContext {
+		@Override public int getRuleIndex() {return _MAINCLASS;}
+		public MainClassContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
+	}
 	@Override public void enterMainClass(miniJavaParser.MainClassContext ctx) { common("mainClass");}
 	@Override public void exitMainClass(miniJavaParser.MainClassContext ctx) {
-		ParserRuleContext node = new miniJavaParser.MainClassContext(ctx, 0);
+		ParserRuleContext node = new MainClassContext2(ctx, 0);
 		node.copyFrom(ctx);
 		node.addChild(vast.get(ctx.statement()));
 		node.invokingState = _MAINCLASS;
 		vast.put(ctx, node);
 	}
+	
+	public static class ClassDeclarationContext2 extends miniJavaParser.ClassDeclarationContext {
+		@Override public int getRuleIndex() {return _CLASSDECLARATION;}
+		public ClassDeclarationContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
+	}
 	@Override public void enterClassDeclaration(miniJavaParser.ClassDeclarationContext ctx) { common("classDeclaration");}
-
 	@Override public void exitClassDeclaration(miniJavaParser.ClassDeclarationContext ctx) {
-		ParserRuleContext node = new miniJavaParser.ClassDeclarationContext(ctx, 0);
+		ParserRuleContext node = new ClassDeclarationContext2(ctx, 0);
 		node.copyFrom(ctx);
 		for (miniJavaParser.VarDeclarationContext i : ctx.varDeclaration())
 			node.addChild(vast.get(i));
@@ -85,35 +100,112 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		vast.put(ctx, node);
 	}
 
+	public static class VarDeclarationContext2 extends miniJavaParser.VarDeclarationContext {
+		@Override public int getRuleIndex() {return _VARDECLARATION;}
+		public VarDeclarationContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
+	}
 	@Override public void enterVarDeclaration(miniJavaParser.VarDeclarationContext ctx) { common("varDeclaration");}
-
 	@Override public void exitVarDeclaration(miniJavaParser.VarDeclarationContext ctx) {
-		ParserRuleContext node = new miniJavaParser.VarDeclarationContext(ctx, 0);
+		ParserRuleContext node = new VarDeclarationContext2(ctx, 0);
 		node.copyFrom(ctx);
+		node.addChild(vast.get(ctx.type()));
 		node.invokingState = _VARDECLARATION;
 		vast.put(ctx, node);
 	}
 
+	public static class MethodDeclarationContext2 extends miniJavaParser.MethodDeclarationContext {
+		@Override public int getRuleIndex() {return _METHODDECLARATION;}
+		public MethodDeclarationContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
+	}
 	@Override public void enterMethodDeclaration(miniJavaParser.MethodDeclarationContext ctx) { common("methodDeclaration");}
-
 	@Override public void exitMethodDeclaration(miniJavaParser.MethodDeclarationContext ctx) {
-		ParserRuleContext node = new miniJavaParser.MethodDeclarationContext(ctx, 0);
+		ParserRuleContext node = new MethodDeclarationContext2(ctx, 0);
 		node.copyFrom(ctx);
-		int len = ctx.type().size();
-		for (int i = 1;i < len;++ i)
-			node.addChild(vast.get(ctx.type().get(i)));
-		for (miniJavaParser.VarDeclarationContext i : ctx.varDeclaration())
-			node.addChild(vast.get(i));
-		for (miniJavaParser.StatementContext i : ctx.statement())
-			node.addChild(vast.get(i));
-		node.addChild(vast.get(ctx.expression()));
+		node.addChild(vast.get(ctx.parameters()));
+		node.addChild(vast.get(ctx.varDecs()));
+		node.addChild(vast.get(ctx.body()));
+		node.addChild(vast.get(ctx.returnExpr()));
 		node.invokingState = _METHODDECLARATION;
 		vast.put(ctx, node);
 	}
+
+	public static class ConditionContext2 extends miniJavaParser.ConditionContext {
+		@Override public int getRuleIndex() {return _CONDITION;}
+		public ConditionContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
+	}
+	@Override public void enterCondition(miniJavaParser.ConditionContext ctx) { common("condition");}
+	@Override public void exitCondition(miniJavaParser.ConditionContext ctx) {
+		ParserRuleContext node = new ConditionContext2(ctx, 0);
+		node.copyFrom(ctx);
+		node.addChild(vast.get(ctx.expression()));
+		node.invokingState = _CONDITION;
+		vast.put(ctx, node);
+	}
+
+	public static class BodyContext2 extends miniJavaParser.BodyContext {
+		@Override public int getRuleIndex() {return _BODY;}
+		public BodyContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
+	}
+	@Override public void enterBody(miniJavaParser.BodyContext ctx) { common("body");}
+	@Override public void exitBody(miniJavaParser.BodyContext ctx) {
+		ParserRuleContext node = new BodyContext2(ctx, 0);
+		node.copyFrom(ctx);
+		for (miniJavaParser.StatementContext i : ctx.statement())
+			node.addChild(vast.get(i));
+		node.invokingState = _BODY;
+		vast.put(ctx, node);
+	}
+
+	public static class VarDecsContext2 extends miniJavaParser.VarDecsContext {
+		@Override public int getRuleIndex() {return _VARDECS;}
+		public VarDecsContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
+	}
+	@Override public void enterVarDecs(miniJavaParser.VarDecsContext ctx) { common("vardecs");}
+	@Override public void exitVarDecs(miniJavaParser.VarDecsContext ctx) {
+		ParserRuleContext node = new VarDecsContext2(ctx, 0);
+		node.copyFrom(ctx);
+		for (miniJavaParser.VarDeclarationContext i : ctx.varDeclaration())
+			node.addChild(vast.get(i));
+		node.invokingState = _VARDECS;
+		vast.put(ctx, node);
+	}
+
+	public static class ParametersContext2 extends miniJavaParser.ReturnExprContext {
+		@Override public int getRuleIndex() {return _PARAMETERS;}
+		public ParametersContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
+	}
+	@Override public void enterParameters(miniJavaParser.ParametersContext ctx) { common("parameters");}
+	@Override public void exitParameters(miniJavaParser.ParametersContext ctx) {
+		ParserRuleContext node = new ParametersContext2(ctx, 0);
+		node.copyFrom(ctx);
+		for (miniJavaParser.TypeContext i : ctx.type())
+			node.addChild(vast.get(i));
+		node.invokingState = _PARAMETERS;
+		vast.put(ctx, node);
+	}
+
+	public static class ReturnExprContext2 extends miniJavaParser.ReturnExprContext {
+		@Override public int getRuleIndex() {return _RETURNEXPR;}
+		public ReturnExprContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
+	}
+	@Override public void enterReturnExpr(miniJavaParser.ReturnExprContext ctx) { common("returnExpr");}
+	@Override public void exitReturnExpr(miniJavaParser.ReturnExprContext ctx) {
+		ParserRuleContext node = new ReturnExprContext2(ctx, 0);
+		node.copyFrom(ctx);
+		node.addChild(vast.get(ctx.expression()));
+		node.invokingState = _RETURNEXPR;
+		vast.put(ctx, node);
+	}
+
+	public static class TypeContext2 extends miniJavaParser.TypeContext {
+		@Override public int getRuleIndex() {return _TYPE;}
+		public TypeContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
+	}
 	@Override public void enterType(miniJavaParser.TypeContext ctx) { common("type");}
 	@Override public void exitType(miniJavaParser.TypeContext ctx) {
-		ParserRuleContext node = new miniJavaParser.TypeContext(ctx, 0);
+		ParserRuleContext node = new TypeContext2(ctx, 0);
 		node.copyFrom(ctx);
+		node.addAnyChild(ctx.getChild(0));
 		node.invokingState = _TYPE;
 		vast.put(ctx, node);
 	}
@@ -126,8 +218,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 	@Override public void exitBlock(miniJavaParser.BlockContext ctx) {
 		ParserRuleContext node = new BlockContext2(ctx);
 		node.copyFrom(ctx);
-		for (miniJavaParser.StatementContext i : ctx.statement())
-			node.addChild(vast.get(i));
+		node.addChild(vast.get(ctx.body()));
 		node.invokingState = _BLOCK;
 		vast.put(ctx, node);
 	}
@@ -140,7 +231,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 	@Override public void exitSelect(miniJavaParser.SelectContext ctx) {
 		ParserRuleContext node = new SelectContext2(ctx);
 		node.copyFrom(ctx);
-		node.addChild(vast.get(ctx.expression()));
+		node.addChild(vast.get(ctx.condition()));
 		for (miniJavaParser.StatementContext i : ctx.statement())
 			node.addChild(vast.get(i));
 		node.invokingState = _SELECT;
@@ -155,7 +246,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 	@Override public void exitWhile(miniJavaParser.WhileContext ctx) {
 		ParserRuleContext node = new WhileContext2(ctx);
 		node.copyFrom(ctx);
-		node.addChild(vast.get(ctx.expression()));
+		node.addChild(vast.get(ctx.condition()));
 		node.addChild(vast.get(ctx.statement()));
 		node.invokingState = _WHILE;
 		vast.put(ctx, node);

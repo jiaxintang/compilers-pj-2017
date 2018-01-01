@@ -22,13 +22,25 @@ varDeclaration
 	:type ID SEMI 
 	;
 
-methodDeclaration
-	:'public' type ID 
-	LPR ( type ID ( COMMA type ID )* )? RPR 
-	'{' ( varDeclaration )* ( statement )* 'return' returnExpr SEMI '}' 
+varDecs
+	:varDeclaration*
 	;
 
-returnExpr
+methodDeclaration
+	:'public' type ID 
+	LPR parameters RPR 
+	'{' varDecs body 'return' returnExpr SEMI '}' 
+	;
+
+body
+	: statement*
+	;
+
+parameters
+	: (type ID ( COMMA type ID)* )?
+	;
+
+returnExpr : expression;
 
 type
 	:'int' '['']'
@@ -38,13 +50,15 @@ type
 	;
 
 statement
-	:'{' ( statement )* '}'												#block
-	|'if' LPR expression RPR statement 'else' statement					#select
-	|'while' LPR expression RPR statement								#while
+	:'{' body '}'														#block
+	|'if' condition statement 'else' statement							#select
+	|'while' condition statement										#while
 	|'System.out.println' LPR expression RPR SEMI						#output
 	|ID ASSIGN expression SEMI											#assign
 	|ID '[' expression ']' ASSIGN expression SEMI 						#arrayAssign
 	;
+
+condition : LPR expression RPR;
 
 expression
 	:expression DOT ID LPR ( expression ( COMMA expression )* )? RPR	#method
@@ -66,9 +80,6 @@ expression
 	|LPR expression RPR													#paren
 	;
 
-LINE_COMMENT : '//' .*? '\r'? '\n' -> skip;
-COMMENT : '/*' .*? '*/' -> skip;
-WS : [ \t\r\n]+ -> skip;
 
 BOOLEAN : 'true' | 'false' ;
 ID : [a-zA-Z][a-zA-Z0-9_]*;
@@ -100,3 +111,6 @@ DOT : '.';
 COMMA : ',';
 
 
+LINE_COMMENT : '//' .*? '\r'? '\n' -> skip;
+COMMENT : '/*' .*? '*/' -> skip;
+WS : [ \t\r\n]+ -> skip;

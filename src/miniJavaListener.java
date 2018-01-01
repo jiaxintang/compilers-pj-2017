@@ -47,6 +47,16 @@ public interface miniJavaListener extends ParseTreeListener {
 	 */
 	void exitVarDeclaration(miniJavaParser.VarDeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link miniJavaParser#varDecs}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarDecs(miniJavaParser.VarDecsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link miniJavaParser#varDecs}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarDecs(miniJavaParser.VarDecsContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link miniJavaParser#methodDeclaration}.
 	 * @param ctx the parse tree
 	 */
@@ -56,6 +66,36 @@ public interface miniJavaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMethodDeclaration(miniJavaParser.MethodDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link miniJavaParser#body}.
+	 * @param ctx the parse tree
+	 */
+	void enterBody(miniJavaParser.BodyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link miniJavaParser#body}.
+	 * @param ctx the parse tree
+	 */
+	void exitBody(miniJavaParser.BodyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link miniJavaParser#parameters}.
+	 * @param ctx the parse tree
+	 */
+	void enterParameters(miniJavaParser.ParametersContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link miniJavaParser#parameters}.
+	 * @param ctx the parse tree
+	 */
+	void exitParameters(miniJavaParser.ParametersContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link miniJavaParser#returnExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterReturnExpr(miniJavaParser.ReturnExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link miniJavaParser#returnExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitReturnExpr(miniJavaParser.ReturnExprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link miniJavaParser#type}.
 	 * @param ctx the parse tree
@@ -138,6 +178,16 @@ public interface miniJavaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitArrayAssign(miniJavaParser.ArrayAssignContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link miniJavaParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void enterCondition(miniJavaParser.ConditionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link miniJavaParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void exitCondition(miniJavaParser.ConditionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code access}
 	 * labeled alternative in {@link miniJavaParser#expression}.

@@ -38,19 +38,19 @@ class miniJava {
 
 		List<String> l = new ArrayList<>();
 		l.add("goal"); // 0
-		l.add("mainClass"); // 1
+		l.add("main"); // 1
 		l.add("classDec"); // 2
-		l.add("varDec"); // 3
+		l.add("Dec"); // 3
 		l.add("methodDec"); // 4
 		l.add("type"); // 5
-		l.add("statement"); // 6
+		l.add("state"); // 6
 		l.add("expr"); // 7
-		l.add("block"); // 8
-		l.add("select"); // 9
+		l.add("body"); // 8
+		l.add("if"); // 9
 		l.add("while"); // 10
-		l.add("output"); // 11
+		l.add("print"); // 11
 		l.add(":="); // 12
-		l.add("arrayAssign"); // 13
+		l.add("ID[expr]=expr"); // 13
 		l.add("expr.func(expr*)"); // 14
 		l.add("expr.length"); // 15
 		l.add("expr[expr]"); // 16
@@ -68,6 +68,11 @@ class miniJava {
 		l.add("new ID()"); // 28
 		l.add("!"); // 29
 		l.add("()"); // 30
+		l.add("return"); //31
+		l.add("param"); //32
+		l.add("vars"); //33
+		l.add("body"); //34
+		l.add("condition"); //35
 
 
 		//show AST in GUI
@@ -81,7 +86,7 @@ class miniJava {
 		else
 			viewer =new TreeViewer(Arrays.asList(
 					parser.getRuleNames()), tree);
-		viewer.setScale(1.5);
+		//viewer.setScale(1.5);
 		panel.add(viewer);
 		frame.add(viewer);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
