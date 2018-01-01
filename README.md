@@ -2,10 +2,13 @@ miniJava-Compiler-FrontEnd
 
 # How to use it:
 ```
-make TESTFILE="PATH/TO/THE/FILE"
+cd src
+./run.sh $YOURFILE
 ```
 
 # 分工
+Duan:14307130262
+Tang:14307130359
 - 词法语法构建: Tang
 - 语义分析: Tang
 - 错误恢复: Tang
