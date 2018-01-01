@@ -2,11 +2,12 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.gui.TreeViewer;
 
-import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
@@ -22,20 +23,6 @@ class miniJava {
 		miniJavaParser parser = new miniJavaParser(tokens);
 		ParseTree tree = parser.goal();
 
-		//show AST in console
-		System.out.println(tree.toStringTree(parser));
-
-		//show AST in GUI
-		JFrame frame  = new JFrame("Antlr AST");
-		JPanel panel = new JPanel();
-		TreeViewer viewer = new TreeViewer(Arrays.asList(
-					parser.getRuleNames()), tree);
-		viewer.setScale(1.5);
-		panel.add(viewer);
-		frame.add(viewer);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(900, 600);
-		frame.setVisible(true);
 
 	
 		// create a standard ANTLR parse tree walker
@@ -43,6 +30,29 @@ class miniJava {
 		// create listener then feed to walker
 		miniJavaLoader loader = new miniJavaLoader();
 		walker.walk(loader, tree);
+		ParseTree ast = loader.ast;
+
+		//show AST in console
+		//System.out.println("AST : ");
+		//System.out.println(tree.toStringTree(parser));
+
+		//show AST in GUI
+		JFrame frame  = new JFrame("Antlr AST");
+		JPanel panel = new JPanel();
+		TreeViewer viewer = new TreeViewer(null, tree);
+		//	new TreeViewer(Arrays.asList(
+			//		parser.getRuleNames()), tree);
+		
+		//TreeViewer viewer = new TreeViewer(null, ast);
+		for (String a : parser.getRuleNames())
+			System.out.println(a);
+		viewer.setScale(1.5);
+		panel.add(viewer);
+		frame.add(viewer);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(900, 600);
+		frame.setVisible(true);
+
 	}
 
 

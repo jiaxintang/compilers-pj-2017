@@ -6,11 +6,11 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class miniJavaLoader extends miniJavaBaseListener {
 	ParseTreeProperty<Integer> values = new ParseTreeProperty<Integer>();
-	ParseTreeProperty<ParseTree> vast = new ParseTreeProperty<ParseTree>();
+	ParseTreeProperty<ParserRuleContext> vast = new ParseTreeProperty<ParserRuleContext>();
 	HashMap<String, Integer> classList= new HashMap<String, Integer>();
 	HashMap<String, Integer> idList = new HashMap<String, Integer>();
 
-	public ParseTree ast;
+	public static ParserRuleContext ast;
 
 	public void setValue(ParseTree node, int value) { values.put(node, value);}
 	public int getValue(ParseTree node) { return values.get(node);}
@@ -21,7 +21,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		String tab=new String();
 		for (int i = 0;i < deep;++ i)
 			tab+=' ';
-		System.out.println(tab + name);
+		//System.out.println(tab + name);
 		deep += 1;
 	}
 	void lv() {deep -= 1;}
@@ -44,16 +44,19 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		common("goal");
 	}
 	@Override public void exitGoal(miniJavaParser.GoalContext ctx) {
-		miniJavaParser.GoalContext node = new miniJavaParser.GoalContext();
-		node.MainClass = vast.get(ctx.mainClass());
-		for (int i = 0;i < node.ClassDeclaration.length;++ i)
-			node.ClassDeclaration[i] = vast.get(ctx.classDeclaration(i));
-
+		ParserRuleContext node = new ParserRuleContext();
+		node.addChild(vast.get(ctx.mainClass()));
+		for (miniJavaParser.ClassDeclarationContext i: ctx.classDeclaration())
+			node.addChild(vast.get(i));
 		ast = node;
 		lv();
 	}
 	@Override public void enterMainClass(miniJavaParser.MainClassContext ctx) { common("mainClass");}
-	@Override public void exitMainClass(miniJavaParser.MainClassContext ctx) {lv();}
+	@Override public void exitMainClass(miniJavaParser.MainClassContext ctx) {
+		ParserRuleContext node = new ParserRuleContext();
+		vast.put(ctx, node);
+		lv();
+	}
 	@Override public void enterClassDeclaration(miniJavaParser.ClassDeclarationContext ctx) { common("classDeclaration");}
 	@Override public void exitClassDeclaration(miniJavaParser.ClassDeclarationContext ctx) {lv();}
 	@Override public void enterVarDeclaration(miniJavaParser.VarDeclarationContext ctx) { common("varDeclaration");}
