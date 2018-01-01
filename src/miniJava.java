@@ -53,24 +53,6 @@ class miniJava {
 		l.add("arrayAssign"); // 13
 		l.add("method"); // 14
 		l.add("length"); // 15
-		l.add("length"); // 16
-		l.add("length"); // 17
-		l.add("length"); // 18
-		l.add("length"); // 19
-		l.add("length"); // 20
-		l.add("length"); // 21
-		l.add("length"); // 22
-		l.add("length"); // 23
-		l.add("length"); // 24
-		l.add("length"); // 25
-		l.add("length"); // 26
-		l.add("length"); // 27
-		l.add("length"); // 28
-		l.add("length"); // 29
-		l.add("length"); // 30
-		l.add("length"); // 30
-		l.add("length"); // 30
-		
 
 
 		//show AST in GUI

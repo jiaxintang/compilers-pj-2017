@@ -14,10 +14,13 @@ TESTFILE = test/test.java
 CONFIG = 
 COMMAND = 
 
+all:
+	$(xrun) $(TASK) $(TESTFILE)
+
 srun:
 	$(compile) $(TASK)*.java;$(xrun) $(TASK) $(TESTFILE)
 
-run: $(CLASSFILE)
+mrun: $(CLASSFILE)
 	$(xrun) $(TASK) $(TESTFILE)
 
 tes: $(CLASSFILE) $(TESTCLASSFILE)

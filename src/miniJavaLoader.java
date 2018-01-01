@@ -20,12 +20,11 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		String tab=new String();
 		for (int i = 0;i < deep;++ i)
 			tab+=' ';
-		System.out.println(tab + name);
+		//System.out.println(tab + name);
 		deep += 1;
 	}
 	void lv() {
 		deep -= 1;
-		System.out.println("lv" + deep);
 	}
 
 	public static final int
