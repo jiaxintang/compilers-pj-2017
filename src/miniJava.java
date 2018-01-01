@@ -37,10 +37,40 @@ class miniJava {
 		//System.out.println(tree.toStringTree(parser));
 
 		List<String> l = new ArrayList<>();
-		l.add("goal");
-		l.add("mainClass");
-		l.add("classDec");
-		l.add("varDec");
+		l.add("goal"); // 0
+		l.add("mainClass"); // 1
+		l.add("classDec"); // 2
+		l.add("varDec"); // 3
+		l.add("methodDec"); // 4
+		l.add("type"); // 5
+		l.add("statement"); // 6
+		l.add("expression"); // 7
+		l.add("block"); // 8
+		l.add("select"); // 9
+		l.add("while"); // 10
+		l.add("output"); // 11
+		l.add("assign"); // 12
+		l.add("arrayAssign"); // 13
+		l.add("method"); // 14
+		l.add("length"); // 15
+		l.add("length"); // 16
+		l.add("length"); // 17
+		l.add("length"); // 18
+		l.add("length"); // 19
+		l.add("length"); // 20
+		l.add("length"); // 21
+		l.add("length"); // 22
+		l.add("length"); // 23
+		l.add("length"); // 24
+		l.add("length"); // 25
+		l.add("length"); // 26
+		l.add("length"); // 27
+		l.add("length"); // 28
+		l.add("length"); // 29
+		l.add("length"); // 30
+		l.add("length"); // 30
+		l.add("length"); // 30
+		
 
 
 		//show AST in GUI
@@ -53,8 +83,6 @@ class miniJava {
 		//			parser.getRuleNames()), ast);
 		//TreeViewer viewer = new TreeViewer(l, ast);
 		TreeViewer viewer = new TreeViewer(null, ast);
-		for (String i : parser.getRuleNames())
-			System.out.println("i : " + i);
 		viewer.setScale(1.5);
 		panel.add(viewer);
 		frame.add(viewer);
