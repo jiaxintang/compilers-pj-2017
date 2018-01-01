@@ -32,6 +32,11 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		return true;
 	}
 
+	public void print(String out)
+	{
+
+	}
+
 	@Override public void enterGoal(miniJavaParser.GoalContext ctx) {common("goal");}
 	@Override public void exitGoal(miniJavaParser.GoalContext ctx) {lv();}
 	@Override public void enterMainClass(miniJavaParser.MainClassContext ctx) { common("mainClass");}
