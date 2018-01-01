@@ -20,7 +20,7 @@ all:
 srun:
 	$(compile) $(TASK)*.java;$(xrun) $(TASK) $(TESTFILE)
 
-mrun: $(CLASSFILE)
+run: $(CLASSFILE)
 	$(xrun) $(TASK) $(TESTFILE)
 
 tes: $(CLASSFILE) $(TESTCLASSFILE)

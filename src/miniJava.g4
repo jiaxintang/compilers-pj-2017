@@ -25,8 +25,10 @@ varDeclaration
 methodDeclaration
 	:'public' type ID 
 	LPR ( type ID ( COMMA type ID )* )? RPR 
-	'{' ( varDeclaration )* ( statement )* 'return' expression SEMI '}' 
+	'{' ( varDeclaration )* ( statement )* 'return' returnExpr SEMI '}' 
 	;
+
+returnExpr
 
 type
 	:'int' '['']'

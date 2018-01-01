@@ -44,27 +44,43 @@ class miniJava {
 		l.add("methodDec"); // 4
 		l.add("type"); // 5
 		l.add("statement"); // 6
-		l.add("expression"); // 7
+		l.add("expr"); // 7
 		l.add("block"); // 8
 		l.add("select"); // 9
 		l.add("while"); // 10
 		l.add("output"); // 11
-		l.add("assign"); // 12
+		l.add(":="); // 12
 		l.add("arrayAssign"); // 13
-		l.add("method"); // 14
-		l.add("length"); // 15
+		l.add("expr.func(expr*)"); // 14
+		l.add("expr.length"); // 15
+		l.add("expr[expr]"); // 16
+		l.add("^"); // 17
+		l.add("*"); // 18
+		l.add("+/-"); // 19
+		l.add("=="); // 20
+		l.add("<"); // 21
+		l.add("&&"); // 22
+		l.add("int"); // 23
+		l.add("bool"); // 24
+		l.add("ID"); // 25
+		l.add("this"); // 26
+		l.add("new int[expr]"); // 27
+		l.add("new ID()"); // 28
+		l.add("!"); // 29
+		l.add("()"); // 30
 
 
 		//show AST in GUI
 		JFrame frame  = new JFrame("Antlr AST");
 		JPanel panel = new JPanel();
-		//TreeViewer viewer = new TreeViewer(null, tree);
-		//TreeViewer viewer =new TreeViewer(Arrays.asList(
-		//			parser.getRuleNames()), tree);
 		//TreeViewer viewer = new TreeViewer(Arrays.asList(
 		//			parser.getRuleNames()), ast);
-		TreeViewer viewer = new TreeViewer(l, ast);
-		//TreeViewer viewer = new TreeViewer(null, ast);
+		TreeViewer viewer;
+		if (true)
+			viewer = new TreeViewer(l, ast);
+		else
+			viewer =new TreeViewer(Arrays.asList(
+					parser.getRuleNames()), tree);
 		viewer.setScale(1.5);
 		panel.add(viewer);
 		frame.add(viewer);
