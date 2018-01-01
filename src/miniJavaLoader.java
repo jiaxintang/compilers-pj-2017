@@ -6,6 +6,9 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class miniJavaLoader extends miniJavaBaseListener {
 	ParseTreeProperty<Integer> values = new ParseTreeProperty<Integer>();
+	HashMap<String, Integer> classList= new HashMap<String, Integer>();
+	HashMap<String, Integer> idList = new HashMap<String, Integer>();
+
 	public void setValue(ParseTree node, int value) { values.put(node, value);}
 	public int getValue(ParseTree node) { return values.get(node);}
 	int deep = 0;
@@ -15,16 +18,13 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		String tab=new String();
 		for (int i = 0;i < deep;++ i)
 			tab+=' ';
-		System.out.print(tab + name);
+		System.out.println(tab + name);
 		deep += 1;
 	}
 	void lv() {deep -= 1;}
 
-	// void : 0
-	// int : 1
-	// float : 2
-	// bool : 3
-	// string : 4
+	public static final int
+		WRONG_TYPE=0, VOID=1, INT=2, FLOAT=3, BOOL=4, STRING=5;
 	boolean check(int left, int right, int exp_left, int exp_right)
 	{
 		if (left != exp_left || right != exp_right)
@@ -83,11 +83,35 @@ public class miniJavaLoader extends miniJavaBaseListener {
 	@Override public void enterNewInt(miniJavaParser.NewIntContext ctx) {common("newInt");}
 	@Override public void exitNewInt(miniJavaParser.NewIntContext ctx) {lv();}
 	@Override public void enterAnd(miniJavaParser.AndContext ctx) {common("&&");}
-	@Override public void exitAnd(miniJavaParser.AndContext ctx) {lv();}
-	@Override public void enterId(miniJavaParser.IdContext ctx) {common("id");}
-	@Override public void exitId(miniJavaParser.IdContext ctx) {lv();}
+	@Override public void exitAnd(miniJavaParser.AndContext ctx) {
+		System.out.println("AND : " + ctx.expression(0) + " && " + ctx.expression(1));
+		int lt = getValue(ctx.expression(0));
+		int rt = getValue(ctx.expression(1));
+
+		if (lt == WRONG_TYPE || rt == WRONG_TYPE)
+			setValue(ctx, WRONG_TYPE);
+		else if (!check(lt, rt, BOOL, BOOL)) {
+			System.out.println("&& must be boolean");
+			setValue(ctx, WRONG_TYPE);
+		}
+		else
+			setValue(ctx, BOOL);
+		lv();
+	}
+	@Override public void exitId(miniJavaParser.IdContext ctx) {
+		System.out.print("ID : ");
+		System.out.println(ctx.ID());
+		if (!idList.containsKey(ctx.ID())) {
+			System.out.println(ctx.ID() + " didn't declare");
+			setValue(ctx, WRONG_TYPE);
+		}
+		else
+			setValue(ctx, idList.get(ctx.ID()));
+	}
 	@Override public void enterExp(miniJavaParser.ExpContext ctx) {common("^");}
-	@Override public void exitExp(miniJavaParser.ExpContext ctx) {lv();}
+	@Override public void exitExp(miniJavaParser.ExpContext ctx) {
+		lv();
+	}
 
 	@Override public void enterEveryRule(ParserRuleContext ctx) {}
 	@Override public void exitEveryRule(ParserRuleContext ctx) {}
