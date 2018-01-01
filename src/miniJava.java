@@ -30,8 +30,6 @@ class miniJava {
 		JPanel panel = new JPanel();
 		TreeViewer viewer = new TreeViewer(Arrays.asList(
 					parser.getRuleNames()), tree);
-		System.out.println(parser.getRuleNames());
-		System.out.println(parser.getClass().getName());
 		viewer.setScale(1.5);
 		panel.add(viewer);
 		frame.add(viewer);

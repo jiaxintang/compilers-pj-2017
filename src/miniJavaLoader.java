@@ -6,8 +6,11 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class miniJavaLoader extends miniJavaBaseListener {
 	ParseTreeProperty<Integer> values = new ParseTreeProperty<Integer>();
+	ParseTreeProperty<ParseTree> vast = new ParseTreeProperty<ParseTree>();
 	HashMap<String, Integer> classList= new HashMap<String, Integer>();
 	HashMap<String, Integer> idList = new HashMap<String, Integer>();
+
+	public ParseTree ast;
 
 	public void setValue(ParseTree node, int value) { values.put(node, value);}
 	public int getValue(ParseTree node) { return values.get(node);}
@@ -37,8 +40,18 @@ public class miniJavaLoader extends miniJavaBaseListener {
 
 	}
 
-	@Override public void enterGoal(miniJavaParser.GoalContext ctx) {common("goal");}
-	@Override public void exitGoal(miniJavaParser.GoalContext ctx) {lv();}
+	@Override public void enterGoal(miniJavaParser.GoalContext ctx) {
+		common("goal");
+	}
+	@Override public void exitGoal(miniJavaParser.GoalContext ctx) {
+		miniJavaParser.GoalContext node = new miniJavaParser.GoalContext();
+		node.MainClass = vast.get(ctx.mainClass());
+		for (int i = 0;i < node.ClassDeclaration.length;++ i)
+			node.ClassDeclaration[i] = vast.get(ctx.classDeclaration(i));
+
+		ast = node;
+		lv();
+	}
 	@Override public void enterMainClass(miniJavaParser.MainClassContext ctx) { common("mainClass");}
 	@Override public void exitMainClass(miniJavaParser.MainClassContext ctx) {lv();}
 	@Override public void enterClassDeclaration(miniJavaParser.ClassDeclarationContext ctx) { common("classDeclaration");}
