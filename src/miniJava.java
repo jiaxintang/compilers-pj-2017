@@ -81,8 +81,8 @@ class miniJava {
 		//			parser.getRuleNames()), tree);
 		//TreeViewer viewer = new TreeViewer(Arrays.asList(
 		//			parser.getRuleNames()), ast);
-		//TreeViewer viewer = new TreeViewer(l, ast);
-		TreeViewer viewer = new TreeViewer(null, ast);
+		TreeViewer viewer = new TreeViewer(l, ast);
+		//TreeViewer viewer = new TreeViewer(null, ast);
 		viewer.setScale(1.5);
 		panel.add(viewer);
 		frame.add(viewer);
