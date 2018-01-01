@@ -39,13 +39,13 @@ class miniJava {
 		//show AST in GUI
 		JFrame frame  = new JFrame("Antlr AST");
 		JPanel panel = new JPanel();
-		TreeViewer viewer = new TreeViewer(null, tree);
-		//	new TreeViewer(Arrays.asList(
-			//		parser.getRuleNames()), tree);
+		//TreeViewer viewer = new TreeViewer(null, tree);
+		//TreeViewer viewer =new TreeViewer(Arrays.asList(
+		//			parser.getRuleNames()), tree);
 		
+		TreeViewer viewer = new TreeViewer(Arrays.asList(
+					parser.getRuleNames()), ast);
 		//TreeViewer viewer = new TreeViewer(null, ast);
-		for (String a : parser.getRuleNames())
-			System.out.println(a);
 		viewer.setScale(1.5);
 		panel.add(viewer);
 		frame.add(viewer);

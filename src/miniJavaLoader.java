@@ -44,16 +44,18 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		common("goal");
 	}
 	@Override public void exitGoal(miniJavaParser.GoalContext ctx) {
-		ParserRuleContext node = new ParserRuleContext();
-		node.addChild(vast.get(ctx.mainClass()));
-		for (miniJavaParser.ClassDeclarationContext i: ctx.classDeclaration())
-			node.addChild(vast.get(i));
+		ParserRuleContext node = ctx;
+		while (!node.isEmpty())
+			node.removeLastChild();
+		//node.addChild(vast.get(ctx.mainClass()));
+		//for (miniJavaParser.ClassDeclarationContext i: ctx.classDeclaration())
+		//	node.addChild(vast.get(i));
 		ast = node;
 		lv();
 	}
 	@Override public void enterMainClass(miniJavaParser.MainClassContext ctx) { common("mainClass");}
 	@Override public void exitMainClass(miniJavaParser.MainClassContext ctx) {
-		ParserRuleContext node = new ParserRuleContext();
+		ParserRuleContext node = ctx;
 		vast.put(ctx, node);
 		lv();
 	}
