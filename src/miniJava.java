@@ -73,6 +73,8 @@ class miniJava {
 		l.add("vars"); //33
 		l.add("body"); //34
 		l.add("condition"); //35
+		l.add("float"); //36
+		l.add("expr(WRONG!)"); //37
 
 
 		//show AST in GUI

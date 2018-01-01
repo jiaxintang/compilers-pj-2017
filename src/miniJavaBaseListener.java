@@ -219,6 +219,18 @@ public class miniJavaBaseListener implements miniJavaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterExpr(miniJavaParser.ExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpr(miniJavaParser.ExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAccess(miniJavaParser.AccessContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -322,6 +334,18 @@ public class miniJavaBaseListener implements miniJavaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAddSub(miniJavaParser.AddSubContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFloat(miniJavaParser.FloatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFloat(miniJavaParser.FloatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

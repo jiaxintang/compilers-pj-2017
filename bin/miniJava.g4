@@ -40,7 +40,7 @@ parameters
 	: (type ID ( COMMA type ID)* )?
 	;
 
-returnExpr : expression;
+returnExpr : expr;
 
 type
 	:'int' '['']'
@@ -53,12 +53,18 @@ statement
 	:'{' body '}'														#block
 	|'if' condition statement 'else' statement							#select
 	|'while' condition statement										#while
-	|'System.out.println' LPR expression RPR SEMI						#output
-	|ID ASSIGN expression SEMI											#assign
-	|ID '[' expression ']' ASSIGN expression SEMI 						#arrayAssign
+	|'System.out.println' LPR expr RPR SEMI						#output
+	|ID ASSIGN expr SEMI											#assign
+	|ID '[' expr ']' ASSIGN expr SEMI 						#arrayAssign
 	;
 
-condition : LPR expression RPR;
+condition : LPR expr RPR;
+
+expr
+	:expression RPR	{ notifyErrorListeners("Too many parentheses"); }
+	|LPR expression { notifyErrorListeners("Missing closing ')'"); }
+	|expression;
+
 
 expression
 	:expression DOT ID LPR ( expression ( COMMA expression )* )? RPR	#method
@@ -71,6 +77,7 @@ expression
 	|expression LT expression											#LT
 	|expression AND expression											#and
 	|INT																#int
+	|FLOAT																#float
 	|BOOLEAN															#bool
 	|ID																	#id
 	|'this'																#this

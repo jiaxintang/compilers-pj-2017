@@ -39,7 +39,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		_AND=22, _INT=23, _BOOL=24, _ID=25, _THIS=26,
 		_NEWINT=27, _NEWID=28, _NOT=29, _PAREN=30,
 		_RETURNEXPR=31, _PARAMETERS=32, _VARDECS=33,
-		_BODY=34, _CONDITION=35;
+		_BODY=34, _CONDITION=35, _FLOAT=36,
+		_EXPR=37;
 
 
 	boolean check(int left, int right, int exp_left, int exp_right)
@@ -137,7 +138,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 	@Override public void exitCondition(miniJavaParser.ConditionContext ctx) {
 		ParserRuleContext node = new ConditionContext2(ctx, 0);
 		node.copyFrom(ctx);
-		node.addChild(vast.get(ctx.expression()));
+		node.addChild(vast.get(ctx.expr()));
 		node.invokingState = _CONDITION;
 		vast.put(ctx, node);
 	}
@@ -184,6 +185,15 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		vast.put(ctx, node);
 	}
 
+	public static class ExprContext2 extends miniJavaParser.ReturnExprContext {
+		@Override public int getRuleIndex() {return _EXPR;}
+		public ExprContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
+	}
+	@Override public void enterExpr(miniJavaParser.ExprContext ctx) { common("parameters");}
+	@Override public void exitExpr(miniJavaParser.ExprContext ctx) {
+		vast.put(ctx, vast.get(ctx.expression()));
+	}
+
 	public static class ReturnExprContext2 extends miniJavaParser.ReturnExprContext {
 		@Override public int getRuleIndex() {return _RETURNEXPR;}
 		public ReturnExprContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
@@ -192,7 +202,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 	@Override public void exitReturnExpr(miniJavaParser.ReturnExprContext ctx) {
 		ParserRuleContext node = new ReturnExprContext2(ctx, 0);
 		node.copyFrom(ctx);
-		node.addChild(vast.get(ctx.expression()));
+		node.addChild(vast.get(ctx.expr()));
 		node.invokingState = _RETURNEXPR;
 		vast.put(ctx, node);
 	}
@@ -260,7 +270,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 	@Override public void exitOutput(miniJavaParser.OutputContext ctx) {
 		ParserRuleContext node = new OutputContext2(ctx);
 		node.copyFrom(ctx);
-		node.addChild(vast.get(ctx.expression()));
+		node.addChild(vast.get(ctx.expr()));
 		node.invokingState = _OUTPUT;
 		vast.put(ctx, node);
 	}
@@ -273,7 +283,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 	@Override public void exitAssign(miniJavaParser.AssignContext ctx) {
 		ParserRuleContext node = new AssignContext2(ctx);
 		node.copyFrom(ctx);
-		node.addChild(vast.get(ctx.expression()));
+		node.addChild(vast.get(ctx.expr()));
 		node.invokingState = _ASSIGN;
 		vast.put(ctx, node);
 	}
@@ -286,7 +296,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 	@Override public void exitArrayAssign(miniJavaParser.ArrayAssignContext ctx) {
 		ParserRuleContext node = new ArrayAssignContext2(ctx);
 		node.copyFrom(ctx);
-		for (miniJavaParser.ExpressionContext i : ctx.expression())
+		for (miniJavaParser.ExprContext i : ctx.expr())
 			node.addChild(vast.get(i));
 		node.invokingState = _ARRAYASSIGN;
 		vast.put(ctx, node);
@@ -434,6 +444,18 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		ParserRuleContext node = new IntContext2(ctx);
 		node.copyFrom(ctx);
 		node.invokingState = _INT;
+		vast.put(ctx, node);
+	}
+
+	public static class FloatContext2 extends miniJavaParser.FloatContext {
+		@Override public int getRuleIndex() {return _FLOAT;}
+		public FloatContext2(miniJavaParser.ExpressionContext ctx) {super(ctx);}
+	}
+	@Override public void enterFloat(miniJavaParser.FloatContext ctx) {common("float");}
+	@Override public void exitFloat(miniJavaParser.FloatContext ctx) {
+		ParserRuleContext node = new FloatContext2(ctx);
+		node.copyFrom(ctx);
+		node.invokingState = _FLOAT;
 		vast.put(ctx, node);
 	}
 

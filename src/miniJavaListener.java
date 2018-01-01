@@ -189,6 +189,16 @@ public interface miniJavaListener extends ParseTreeListener {
 	 */
 	void exitCondition(miniJavaParser.ConditionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link miniJavaParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr(miniJavaParser.ExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link miniJavaParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr(miniJavaParser.ExprContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code access}
 	 * labeled alternative in {@link miniJavaParser#expression}.
 	 * @param ctx the parse tree
@@ -296,6 +306,18 @@ public interface miniJavaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAddSub(miniJavaParser.AddSubContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code float}
+	 * labeled alternative in {@link miniJavaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterFloat(miniJavaParser.FloatContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code float}
+	 * labeled alternative in {@link miniJavaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitFloat(miniJavaParser.FloatContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code EQ}
 	 * labeled alternative in {@link miniJavaParser#expression}.
