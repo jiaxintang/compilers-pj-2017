@@ -45,6 +45,8 @@ returnExpr : expr;
 type
 	:'int' '['']'
 	|'boolean'
+	|'String'
+	|'float'
 	|'int'
 	|ID 
 	;

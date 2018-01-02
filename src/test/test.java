@@ -9,6 +9,7 @@ class Fuck {
 		int n;
 		int n;
 		m = 1.1 + .2 * c[2].length.a()[4];
+		m = 1a3;
 		if ((a < 1)
 			m=1;
 		else
@@ -16,5 +17,8 @@ class Fuck {
 		return m;
 	}
 
+}
+
+class Shit extends Shit{
 }
 

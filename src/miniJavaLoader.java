@@ -3,12 +3,17 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.antlr.v4.runtime.misc.Interval;
+import java.util.ArrayList;
 
 public class miniJavaLoader extends miniJavaBaseListener {
 	ParseTreeProperty<Integer> values = new ParseTreeProperty<Integer>();
 	ParseTreeProperty<ParserRuleContext> vast = new ParseTreeProperty<ParserRuleContext>();
-	HashMap<String, Integer> classList= new HashMap<String, Integer>();
-	HashMap<String, Integer> idList = new HashMap<String, Integer>();
+
+	static String classPrefix = "";
+	HashMap<String, Integer> classType = new HashMap<String, Integer>();
+	HashMap<String, HashMap<String, ArrayList<String> > > methods = new HashMap<String, HashMap<String, ArrayList<String> > >();
+
 
 	public static ParserRuleContext ast;
 
@@ -55,11 +60,144 @@ public class miniJavaLoader extends miniJavaBaseListener {
 
 	}
 
+	public void printColor(String output, int color)
+	{
+		System.out.print("\033[" + Integer.toString(color) + ";1m");
+		System.out.print(output);
+		System.out.print("\033[0m");
+	}
+
+	public void err(TerminalNode node, String output)
+	{
+		int line = node.getSymbol().getLine();
+		int lineStart = node.getSymbol().getStartIndex()- node.getSymbol().getCharPositionInLine();
+		int start = node.getSymbol().getCharPositionInLine();
+		int stop = node.getSymbol().getStopIndex() - lineStart;
+
+		int sourceEnd = node.getSymbol().getInputStream().size();
+		String standardOutput = Integer.toString(line) + ":" + Integer.toString(start) + ": \033[31;1merror\033[0m";
+		System.out.println(standardOutput + " : " + output);
+
+		String lineString = node.getSymbol().getInputStream().getText(new Interval(lineStart, sourceEnd-1)).split("\n|\r",2)[0];
+		lineString = lineString.replaceAll("\t", " ");
+		int len = lineString.length();
+		System.out.print(lineString.substring(0, start));
+		printColor(lineString.substring(start, stop+1), 31);
+		System.out.println(lineString.substring(stop+1, len));
+		for (int i = 0;i < start;++ i)
+			System.out.print(" ");
+		System.out.print("\033[31;1m");
+		for (int i = start;i <= stop;++ i)
+			System.out.print("^");
+		System.out.println("\033[0m");
+	}
+
+	public void warn(TerminalNode node, String output)
+	{
+		int line = node.getSymbol().getLine();
+		int lineStart = node.getSymbol().getStartIndex()- node.getSymbol().getCharPositionInLine();
+		int start = node.getSymbol().getCharPositionInLine();
+		int stop = node.getSymbol().getStopIndex() - lineStart;
+
+		int sourceEnd = node.getSymbol().getInputStream().size();
+		String standardOutput = Integer.toString(line) + ":" + Integer.toString(start) + ": \033[31;1mwarning\033[0m";
+		System.out.println(standardOutput + " : " + output);
+
+		String lineString = node.getSymbol().getInputStream().getText(new Interval(lineStart, sourceEnd-1)).split("\n|\r",2)[0];
+		lineString = lineString.replaceAll("\t", " ");
+		int len = lineString.length();
+		System.out.print(lineString.substring(0, start));
+		printColor(lineString.substring(start, stop+1), 34);
+		System.out.println(lineString.substring(stop+1, len));
+		for (int i = 0;i < start;++ i)
+			System.out.print(" ");
+		System.out.print("\033[34;1m");
+		for (int i = start;i <= stop;++ i)
+			System.out.print("^");
+		System.out.println("\033[0m");
+	}
+
 	public static class GoalContext2 extends miniJavaParser.GoalContext {
 		@Override public int getRuleIndex() {return _GOAL;}
 		public GoalContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
 	}
 	@Override public void enterGoal(miniJavaParser.GoalContext ctx) {
+		// record all class
+		classType.put("void", 0);
+		classType.put("int", 1);
+		classType.put("float", 2);
+		classType.put("String", 3);
+		classType.put("boolean", 4);
+		int po = 10;
+		HashMap<String, String> Edge = new HashMap<String, String>();
+		for (miniJavaParser.ClassDeclarationContext i: ctx.classDeclaration()) {
+			String s = i.ID(0).getSymbol().getText();
+			Edge.put(s, "null");
+			if (classType.containsKey(s)) {
+				if (classType.get(s) < 10)
+					err(i.ID(0), "Class name illegal, '" + s + "' is reserved word");
+				else
+					err(i.ID(0), "CLASS '" + s + "' already exists");
+			}
+			else
+				classType.put(s, po++);
+
+		}
+
+		// extends
+		for (miniJavaParser.ClassDeclarationContext i: ctx.classDeclaration()) {
+			if (i.ID().size() == 2) {
+				String start = i.ID(0).getSymbol().getText();
+				String s = i.ID(1).getSymbol().getText();
+				if (!Edge.containsKey((s))) {
+					err(i.ID(1), "Unknown type '" + s + "' found when extends");
+				}
+				else {
+					System.out.println(s);
+					System.out.println(start);
+					System.out.println(s.equals(start));
+					while (!s.equals("null") && !s.equals(start))
+						s = Edge.get(s);
+					if (start.equals(s))
+						err(i.ID(1), "Loop inheritance occurred when extends '" + s + "'");
+					else
+						Edge.put(start, i.ID(1).getSymbol().getText());
+				}
+			}
+		}
+
+		// methods
+		boolean ok = true;
+		while (ok) {
+			ok = false;
+			for (String i: Edge.keySet()) {
+				String s = Edge.get(i);
+				if (s.equals("true"))
+					continue;
+				HashMap<String, ArrayList<String> > now;
+				if (s.equals("null")) {
+					// original methods
+					now = new HashMap<String, ArrayList<String> >();
+				}
+				else if (Edge.get(s).equals("true")) {
+					// extends
+					HashMap<String, ArrayList<String> > iter = methods.get(s);
+					now = (HashMap<String, ArrayList<String> >)iter.clone();
+				}
+				if (s.equals("null") || Edge.get(s).equals("true")) {
+					ArrayList<String> lis = new ArrayList<String>();
+					for (miniJavaParser.ClassDeclarationContext classIter: ctx.classDeclaration()) {
+						if (classIter.ID(0).getSymbol().getText().equals(i)) {
+							List<MethodDeclarationContext> methodLis = classIter.methodDeclaration();
+							break;
+						}
+					}
+					Edge.put(i, "true");
+				}
+				ok = true;
+			}
+		}
+
 		common("goal");
 	}
 	@Override public void exitGoal(miniJavaParser.GoalContext ctx) {
@@ -510,20 +648,6 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			node.addChild(vast.get(i));
 		node.invokingState = _AND;
 		vast.put(ctx, node);
-		// context
-		System.out.println("AND : " + ctx.expression(0) + " && " + ctx.expression(1));
-		int lt = getValue(ctx.expression(0));
-		int rt = getValue(ctx.expression(1));
-
-		if (lt == WRONG_TYPE || rt == WRONG_TYPE)
-			setValue(ctx, WRONG_TYPE);
-		else if (!check(lt, rt, BOOL, BOOL)) {
-			System.out.println("&& must be boolean");
-			setValue(ctx, WRONG_TYPE);
-		}
-		else
-			setValue(ctx, BOOL);
-		
 	}
 
 	public static class IdContext2 extends miniJavaParser.IdContext {
@@ -536,15 +660,6 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.copyFrom(ctx);
 		node.invokingState = _ID;
 		vast.put(ctx, node);
-		// context
-		System.out.print("ID : ");
-		System.out.println(ctx.ID());
-		if (!idList.containsKey(ctx.ID())) {
-			System.out.println(ctx.ID() + " didn't declare");
-			setValue(ctx, WRONG_TYPE);
-		}
-		else
-			setValue(ctx, idList.get(ctx.ID()));
 	}
 
 	public static class ExpContext2 extends miniJavaParser.ExpContext {
