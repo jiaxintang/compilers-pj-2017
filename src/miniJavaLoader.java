@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.misc.Interval;
 import java.util.ArrayList;
+import java.util.List;
 
 public class miniJavaLoader extends miniJavaBaseListener {
 	ParseTreeProperty<Integer> values = new ParseTreeProperty<Integer>();
@@ -57,7 +58,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 
 	public void print(String out)
 	{
-
+		System.out.print(out);
 	}
 
 	public void printColor(String output, int color)
@@ -117,6 +118,13 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		System.out.println("\033[0m");
 	}
 
+	public String combineMethod(String name, ArrayList<String> param) {
+		String s = name;
+		for (int i = 0;i < param.size(); ++i)
+			s = s + "|" + param.get(i);
+		return s;
+	}
+
 	public static class GoalContext2 extends miniJavaParser.GoalContext {
 		@Override public int getRuleIndex() {return _GOAL;}
 		public GoalContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
@@ -153,9 +161,6 @@ public class miniJavaLoader extends miniJavaBaseListener {
 					err(i.ID(1), "Unknown type '" + s + "' found when extends");
 				}
 				else {
-					System.out.println(s);
-					System.out.println(start);
-					System.out.println(s.equals(start));
 					while (!s.equals("null") && !s.equals(start))
 						s = Edge.get(s);
 					if (start.equals(s))
@@ -175,23 +180,39 @@ public class miniJavaLoader extends miniJavaBaseListener {
 				if (s.equals("true"))
 					continue;
 				HashMap<String, ArrayList<String> > now;
-				if (s.equals("null")) {
-					// original methods
-					now = new HashMap<String, ArrayList<String> >();
-				}
-				else if (Edge.get(s).equals("true")) {
-					// extends
-					HashMap<String, ArrayList<String> > iter = methods.get(s);
-					now = (HashMap<String, ArrayList<String> >)iter.clone();
-				}
 				if (s.equals("null") || Edge.get(s).equals("true")) {
-					ArrayList<String> lis = new ArrayList<String>();
+					if (s.equals("null")) {
+						// original methods
+						now = new HashMap<String, ArrayList<String> >();
+					}
+					else {
+						// extends
+						HashMap<String, ArrayList<String> > iter = methods.get(s);
+						now = (HashMap<String, ArrayList<String> >)iter.clone();
+					}
 					for (miniJavaParser.ClassDeclarationContext classIter: ctx.classDeclaration()) {
-						if (classIter.ID(0).getSymbol().getText().equals(i)) {
-							List<MethodDeclarationContext> methodLis = classIter.methodDeclaration();
+						String className = classIter.ID(0).getSymbol().getText();
+						if (className.equals(i)) {
+							for (miniJavaParser.MethodDeclarationContext methodIter: classIter.methodDeclaration()) {
+								String methodName = methodIter.ID().getSymbol().getText();
+								ArrayList<String> lis = new ArrayList<String>();
+								lis.add(methodIter.type().getText());
+								miniJavaParser.ParametersContext param = methodIter.parameters();
+								for (miniJavaParser.TypeContext typeIter: param.type())
+									lis.add(typeIter.getText());
+
+								// add method
+								String newName = combineMethod(methodName, lis);
+								if (now.containsKey(newName)) {
+									err(methodIter.ID(), "Function already declared");
+									continue;
+								}
+								now.put(newName, lis);
+							}
 							break;
 						}
 					}
+					methods.put(i, now);
 					Edge.put(i, "true");
 				}
 				ok = true;
