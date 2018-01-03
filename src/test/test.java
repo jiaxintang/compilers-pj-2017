@@ -14,12 +14,12 @@ class Fuck {
 		int n;
 		//m = 1.1 + .2 * c[2].length.a()[4]^7;
 		//m = a3;
-		m = 1^2.;
+		m = 1^2.+3-4.;
 		if (a < 1)
 			m=1;
 		else
 			m=2;
-		return m;
+		return n;
 	}
 	public int hahaha() {
 		System.out.println("");

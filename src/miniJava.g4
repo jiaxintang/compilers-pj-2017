@@ -77,7 +77,7 @@ expression
 	|expression '[' expression ']'										#access
 	|expression EXP<assoc=right> expression								#exp
 	|expression MUL expression											#mul
-	|expression (ADD | SUB) expression									#addSub
+	|expression (OP=ADD | OP=SUB) expression							#addSub
 	|expression EQ expression											#EQ
 	|expression LT expression											#LT
 	|expression AND expression											#and

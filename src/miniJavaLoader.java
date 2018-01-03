@@ -593,6 +593,20 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			try{vast.get(i).getText();node.addChild(vast.get(i));}catch (NullPointerException e) {}
 		node.invokingState = _LT;
 		vast.put(ctx, node);
+
+		String typeL = values.get(ctx.expression(0));
+		String typeR = values.get(ctx.expression(1));
+		if (typeL.equals("wrong") || typeR.equals("wrong")) {
+			values.put(ctx, "wrong");
+			return;
+		}
+		if ((typeL.equals("boolean") ) && (typeR.equals("boolean"))) {
+			values.put(ctx, "boolean");
+		}
+		else {
+			err(ctx.LT(), "Invalid operands of type '" + typeL + "' and '" + typeR + "' to binary " + "<");
+			values.put(ctx, "wrong");
+		}
 	}
 
 	public static class LengthContext2 extends miniJavaParser.LengthContext {
@@ -620,6 +634,23 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			try{vast.get(i).getText();node.addChild(vast.get(i));}catch (NullPointerException e) {}
 		node.invokingState = _ADDSUB;
 		vast.put(ctx, node);
+
+		String typeL = values.get(ctx.expression(0));
+		String typeR = values.get(ctx.expression(1));
+		TerminalNode op = ctx.OP.getText().equals("+")?ctx.ADD():ctx.SUB();
+		if (typeL.equals("wrong") || typeR.equals("wrong")) {
+			values.put(ctx, "wrong");
+			return;
+		}
+		if ((typeL.equals("int") || typeL.equals("float")) && (typeR.equals("int") || typeR.equals("float"))) {
+			values.put(ctx, "float");
+			if (!typeL.equals(typeR))
+				warn(op, "Implicit conversion between 'int' and 'float'");
+		}
+		else {
+			err(op, "Invalid operands of type '" + typeL + "' and '" + typeR + "' to binary " + ctx.OP.getText());
+			values.put(ctx, "wrong");
+		}
 	}
 
 	public static class EQContext2 extends miniJavaParser.EQContext {
@@ -634,6 +665,20 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			try{vast.get(i).getText();node.addChild(vast.get(i));}catch (NullPointerException e) {}
 		node.invokingState = _EQ;
 		vast.put(ctx, node);
+
+		String typeL = values.get(ctx.expression(0));
+		String typeR = values.get(ctx.expression(1));
+		if (typeL.equals("wrong") || typeR.equals("wrong")) {
+			values.put(ctx, "wrong");
+			return;
+		}
+		if ((typeL.equals("boolean") ) && (typeR.equals("boolean"))) {
+			values.put(ctx, "boolean");
+		}
+		else {
+			err(ctx.EQ(), "Invalid operands of type '" + typeL + "' and '" + typeR + "' to binary " + "==");
+			values.put(ctx, "wrong");
+		}
 	}
 
 	public static class IntContext2 extends miniJavaParser.IntContext {
@@ -731,6 +776,20 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			try{vast.get(i).getText();node.addChild(vast.get(i));}catch (NullPointerException e) {}
 		node.invokingState = _AND;
 		vast.put(ctx, node);
+
+		String typeL = values.get(ctx.expression(0));
+		String typeR = values.get(ctx.expression(1));
+		if (typeL.equals("wrong") || typeR.equals("wrong")) {
+			values.put(ctx, "wrong");
+			return;
+		}
+		if ((typeL.equals("boolean") ) && (typeR.equals("boolean"))) {
+			values.put(ctx, "boolean");
+		}
+		else {
+			err(ctx.AND(), "Invalid operands of type '" + typeL + "' and '" + typeR + "' to binary " + "&&");
+			values.put(ctx, "wrong");
+		}
 	}
 
 	public static class IdContext2 extends miniJavaParser.IdContext {
@@ -781,6 +840,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		}
 		else {
 			err(ctx.EXP(), "Invalid operands of type '" + typeL + "' and '" + typeR + "' to binary " + "^");
+			values.put(ctx, "wrong");
 		}
 	}
 
