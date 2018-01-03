@@ -568,7 +568,6 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		vast.put(ctx, node);
 
 		// TODO
-		/*
 		String type;
 		for (miniJavaParser.ExpressionContext i: ctx.expression()) {
 			type = values.get(i);
@@ -577,7 +576,14 @@ public class miniJavaLoader extends miniJavaBaseListener {
 				return;
 			}
 		}
-		*/
+		boolean getClass = false;
+		for (miniJavaParser.ExpressionContext i: ctx.expression()) {
+			type = values.get(i);
+			if (!getClass) {
+				getClass = true;
+			}
+
+		}
 
 	}
 
@@ -822,7 +828,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			values.put(ctx, "boolean");
 		}
 		else {
-			err(ctx.
+			err(ctx.NOT(), "Expression must be 'boolean'");
 			values.put(ctx, "wrong");
 		}
 	}
@@ -838,6 +844,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		try{vast.get(ctx.expression()).getText();node.addChild(vast.get(ctx.expression()));}catch (NullPointerException e) {}
 		node.invokingState = _PAREN;
 		vast.put(ctx, node);
+
+		values.put(ctx, values.get(ctx));
 	}
 
 	public static class NewIntContext2 extends miniJavaParser.NewIntContext {

@@ -17,8 +17,9 @@ class Fuck {
 		//m = a3;
 		m = 1^2.+3-4.+this;
 		m = a[1.];
-		m = new int[10];
-		m = new int[10.];
+		m = !1;
+		m = (new int[10]);
+		m = (new int[10.]);
 		if (a < 1)
 			m=1;
 		else
