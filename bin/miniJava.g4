@@ -86,10 +86,10 @@ expression
 	|BOOLEAN															#bool
 	|STRING																#string
 	|ID																	#id
-	|'this'																#this
+	|THIS																#this
 	|'new' 'int' SLP expression SRP										#newInt
 	|'new' ID LPR RPR													#newId
-	|'!' expression														#not
+	|NOT expression														#not
 	|LPR expression RPR													#paren
 	;
 
@@ -112,6 +112,8 @@ SLP : '[';
 SRP : ']';
 RETURN : 'return';
 IF : 'if';
+THIS : 'this';
+NOT : '!';
 
 BOOLEAN : 'true' | 'false' ;
 ID : [a-zA-Z][a-zA-Z0-9_]*;

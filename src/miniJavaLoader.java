@@ -11,7 +11,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 	ParseTreeProperty<String> values = new ParseTreeProperty<String>();
 	ParseTreeProperty<ParserRuleContext> vast = new ParseTreeProperty<ParserRuleContext>();
 
-	static String classPrefix = "";
+	String classPrefix;
 	HashMap<String, Integer> classType = new HashMap<String, Integer>();
 	HashMap<String, HashMap<String, ArrayList<String> > > methods = new HashMap<String, HashMap<String, ArrayList<String> > >();
 
@@ -257,6 +257,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		for (miniJavaParser.VarDeclarationContext i : ctx.varDeclaration()) {
 			String type = i.type().getText();
 			String name = i.ID().getSymbol().getText();
+			classPrefix = name;
 			if (classVar.containsKey(name)) {
 				err(i.ID(), "redefinition of '" + type + " " + name + "'");
 			}
@@ -270,6 +271,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 	}
 	@Override public void exitClassDeclaration(miniJavaParser.ClassDeclarationContext ctx) {
 		classVar.clear();
+		classPrefix = "";
 
 		ParserRuleContext node = new ClassDeclarationContext2(ctx, 0);
 		node.copyFrom(ctx);
@@ -565,6 +567,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.invokingState = _METHOD;
 		vast.put(ctx, node);
 
+		// TODO
+		/*
 		String type;
 		for (miniJavaParser.ExpressionContext i: ctx.expression()) {
 			type = values.get(i);
@@ -573,6 +577,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 				return;
 			}
 		}
+		*/
+
 	}
 
 	public static class MulContext2 extends miniJavaParser.MulContext {
@@ -615,6 +621,14 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.copyFrom(ctx);
 		node.invokingState = _NEWID;
 		vast.put(ctx, node);
+
+		String type = ctx.ID().getSymbol().getText();
+		if (classType.containsKey(type))
+			values.put(ctx, type);
+		else {
+			err(ctx.ID(), "'" + type + "' is not declare in this scope");
+			values.put(ctx, "wrong");
+		}
 	}
 
 	public static class ThisContext2 extends miniJavaParser.ThisContext {
@@ -627,6 +641,13 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.copyFrom(ctx);
 		node.invokingState = _THIS;
 		vast.put(ctx, node);
+
+		if (classType.containsKey(classPrefix))
+			values.put(ctx, classPrefix);
+		else {
+			err(ctx.THIS(), "Invalid use of 'this'");
+			values.put(ctx, "wrong");
+		}
 	}
 
 	public static class LTContext2 extends miniJavaParser.LTContext {
@@ -795,6 +816,15 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		try{vast.get(ctx.expression()).getText();node.addChild(vast.get(ctx.expression()));}catch (NullPointerException e) {}
 		node.invokingState = _NOT;
 		vast.put(ctx, node);
+
+		String type = values.get(ctx.expression());
+		if (type.equals("boolean")) {
+			values.put(ctx, "boolean");
+		}
+		else {
+			err(ctx.
+			values.put(ctx, "wrong");
+		}
 	}
 
 	public static class ParenContext2 extends miniJavaParser.ParenContext {
@@ -822,7 +852,14 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.invokingState = _NEWINT;
 		vast.put(ctx, node);
 
-		values.put(ctx, "int");
+		String type = values.get(ctx.expression());
+		if (type.equals("int")) {
+			values.put(ctx, "int[");
+		}
+		else {
+			err(ctx.SLP(), "Expression in '[]' should be int");
+			values.put(ctx, "wrong");
+		}
 	}
 
 	public static class AndContext2 extends miniJavaParser.AndContext {
