@@ -141,6 +141,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		classType.put("float", 2);
 		classType.put("String", 3);
 		classType.put("boolean", 4);
+		classType.put("int[", 5);
 		int po = 10;
 		HashMap<String, String> Edge = new HashMap<String, String>();
 		for (miniJavaParser.ClassDeclarationContext i: ctx.classDeclaration()) {
@@ -510,6 +511,28 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			try{vast.get(i).getText();node.addChild(vast.get(i));}catch (NullPointerException e) {}
 		node.invokingState = _ACCESS;
 		vast.put(ctx, node);
+
+		String typeL = values.get(ctx.expression(0));
+		String typeR = values.get(ctx.expression(1));
+		if (typeL.equals("wrong") || typeR.equals("wrong")) {
+			values.put(ctx, "wrong");
+			return;
+		}
+		if (typeL.substring(typeL.length()-1, typeL.length()).equals("[") && typeR.equals("int")) {
+			values.put(ctx, typeL.substring(0,typeL.length()-1));
+		}
+		else if (!typeR.equals("int")) {
+			err(ctx.SLP(), "Invalid types '" + typeL + typeR + ']' + "' for array subscript");
+			values.put(ctx, "wrong");
+		}
+		else if (typeL.substring(typeL.length()-1, typeL.length()).equals("[")) {
+			err(ctx.SLP(), "Invalid array access for type '" + typeL + "'");
+			values.put(ctx, "wrong");
+		}
+		else {
+			err(ctx.SLP(), "Invalid operands of type '" + typeL + "' and '" + typeR + "' to binary " + ctx.SLP().getSymbol().getText());
+			values.put(ctx, "wrong");
+		}
 	}
 
 	public static class BoolContext2 extends miniJavaParser.BoolContext {
@@ -541,6 +564,15 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			try{vast.get(i).getText();node.addChild(vast.get(i));}catch (NullPointerException e) {}
 		node.invokingState = _METHOD;
 		vast.put(ctx, node);
+
+		String type;
+		for (miniJavaParser.ExpressionContext i: ctx.expression()) {
+			type = values.get(i);
+			if (type.equals("wrong")) {
+				values.put(ctx, "wrong");
+				return;
+			}
+		}
 	}
 
 	public static class MulContext2 extends miniJavaParser.MulContext {
@@ -555,6 +587,22 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			try{vast.get(i).getText();node.addChild(vast.get(i));}catch (NullPointerException e) {}
 		node.invokingState = _MUL;
 		vast.put(ctx, node);
+
+		String typeL = values.get(ctx.expression(0));
+		String typeR = values.get(ctx.expression(1));
+		if (typeL.equals("wrong") || typeR.equals("wrong")) {
+			values.put(ctx, "wrong");
+			return;
+		}
+		if ((typeL.equals("int") || typeL.equals("float")) && (typeR.equals("int") || typeR.equals("float"))) {
+			values.put(ctx, "float");
+			if (!typeL.equals(typeR))
+				warn(ctx.MUL(), "Implicit conversion between 'int' and 'float'");
+		}
+		else {
+			err(ctx.MUL(), "Invalid operands of type '" + typeL + "' and '" + typeR + "' to binary " + ctx.MUL().getSymbol().getText());
+			values.put(ctx, "wrong");
+		}
 	}
 
 	public static class NewIdContext2 extends miniJavaParser.NewIdContext {
@@ -620,6 +668,19 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		try{vast.get(ctx.expression()).getText();node.addChild(vast.get(ctx.expression()));}catch (NullPointerException e) {}
 		node.invokingState = _LENGTH;
 		vast.put(ctx, node);
+
+		String type = values.get(ctx.expression());
+		if (type.equals("wrong")) {
+			values.put(ctx, "wrong");
+			return;
+		}
+		if (type.substring(type.length()-1, type.length()).equals("[")) {
+			values.put(ctx, "int");
+		}
+		else {
+			err(ctx.DOT(), "Type '" + type + "' has no member 'length'");
+			values.put(ctx, "wrong");
+		}
 	}
 
 	public static class AddSubContext2 extends miniJavaParser.AddSubContext {

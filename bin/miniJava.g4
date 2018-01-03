@@ -4,7 +4,7 @@ goal: mainClass (classDeclaration)*;
 
 mainClass
 	:'class' ID BLP 
-	'public' 'static' 'void' 'main' LPR 'String' '[' ']' ID RPR 
+	'public' 'static' 'void' 'main' LPR 'String' SLP SRP ID RPR 
 	BLP statement BRP 
 	BRP 
 	;
@@ -46,7 +46,7 @@ parameters
 returnExpr : expr;
 
 type
-	:'int' '[' ']'
+	:'int' SLP SRP
 	|'boolean'
 	|'String'
 	|'float'
@@ -60,7 +60,7 @@ statement
 	|'while' condition statement										#while
 	|'System.out.println' LPR expr RPR SEMI						#output
 	|ID ASSIGN expr SEMI											#assign
-	|ID '[' expr ']' ASSIGN expr SEMI 						#arrayAssign
+	|ID SLP expr SRP ASSIGN expr SEMI 						#arrayAssign
 	;
 
 condition : LPR expr RPR;
@@ -74,7 +74,7 @@ expr
 expression
 	:expression DOT ID LPR ( expression ( COMMA expression )* )? RPR	#method
 	|expression DOT 'length'											#length
-	|expression '[' expression ']'										#access
+	|expression SLP expression SRP										#access
 	|expression EXP<assoc=right> expression								#exp
 	|expression MUL expression											#mul
 	|expression (OP=ADD | OP=SUB) expression							#addSub
@@ -87,7 +87,7 @@ expression
 	|STRING																#string
 	|ID																	#id
 	|'this'																#this
-	|'new' 'int' '[' expression ']'										#newInt
+	|'new' 'int' SLP expression SRP										#newInt
 	|'new' ID LPR RPR													#newId
 	|'!' expression														#not
 	|LPR expression RPR													#paren
@@ -108,6 +108,8 @@ DOT : '.';
 COMMA : ',';
 BLP : '{';
 BRP : '}';
+SLP : '[';
+SRP : ']';
 RETURN : 'return';
 IF : 'if';
 

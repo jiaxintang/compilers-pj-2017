@@ -15,6 +15,7 @@ class Fuck {
 		//m = 1.1 + .2 * c[2].length.a()[4]^7;
 		//m = a3;
 		m = 1^2.+3-4.;
+		m = a[1.];
 		if (a < 1)
 			m=1;
 		else
