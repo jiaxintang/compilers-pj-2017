@@ -12,8 +12,9 @@ class Fuck {
 	public int Haha(int num) {
 		int n;
 		int n;
-		m = 1.1 + .2 * c[2].length.a()[4];
-		m = a3;
+		//m = 1.1 + .2 * c[2].length.a()[4]^7;
+		//m = a3;
+		m = 1^2.;
 		if (a < 1)
 			m=1;
 		else
@@ -24,7 +25,7 @@ class Fuck {
 		System.out.println("");
 		return a;
 	}
-	public int hahaha(int a) {
+	public int hahaha() {
 		System.out.println("");
 	}
 }

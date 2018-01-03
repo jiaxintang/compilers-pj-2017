@@ -106,7 +106,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		int stop = node.getSymbol().getStopIndex() - lineStart;
 
 		int sourceEnd = node.getSymbol().getInputStream().size();
-		String standardOutput = "line " + Integer.toString(line) + ":" + Integer.toString(start) + " \033[31;1mwarning\033[0m";
+		String standardOutput = "line " + Integer.toString(line) + ":" + Integer.toString(start) + " \033[34;1mwarning\033[0m";
 		System.out.println(standardOutput + " : " + output);
 
 		String lineString = node.getSymbol().getInputStream().getText(new Interval(lineStart, sourceEnd-1)).split("\n|\r",2)[0];
@@ -522,13 +522,18 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.copyFrom(ctx);
 		node.invokingState = _BOOL;
 		vast.put(ctx, node);
+
+		values.put(ctx, "boolean");
 	}
 
 	public static class MethodContext2 extends miniJavaParser.MethodContext {
 		@Override public int getRuleIndex() {return _METHOD;}
 		public MethodContext2(miniJavaParser.ExpressionContext ctx) {super(ctx);}
 	}
-	@Override public void enterMethod(miniJavaParser.MethodContext ctx) {common("method");}
+	@Override public void enterMethod(miniJavaParser.MethodContext ctx) {
+
+		common("method");
+	}
 	@Override public void exitMethod(miniJavaParser.MethodContext ctx) {
 		ParserRuleContext node = new MethodContext2(ctx);
 		node.copyFrom(ctx);
@@ -641,6 +646,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.copyFrom(ctx);
 		node.invokingState = _INT;
 		vast.put(ctx, node);
+
+		values.put(ctx, "int");
 	}
 
 	public static class FloatContext2 extends miniJavaParser.FloatContext {
@@ -653,6 +660,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.copyFrom(ctx);
 		node.invokingState = _FLOAT;
 		vast.put(ctx, node);
+
+		values.put(ctx, "float");
 	}
 
 	public static class StringContext2 extends miniJavaParser.StringContext {
@@ -665,6 +674,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.copyFrom(ctx);
 		node.invokingState = _STRING;
 		vast.put(ctx, node);
+
+		values.put(ctx, "String");
 	}
 
 	public static class NotContext2 extends miniJavaParser.NotContext {
@@ -704,6 +715,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		try{vast.get(ctx.expression()).getText();node.addChild(vast.get(ctx.expression()));}catch (NullPointerException e) {}
 		node.invokingState = _NEWINT;
 		vast.put(ctx, node);
+
+		values.put(ctx, "int");
 	}
 
 	public static class AndContext2 extends miniJavaParser.AndContext {
@@ -730,6 +743,16 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.copyFrom(ctx);
 		node.invokingState = _ID;
 		vast.put(ctx, node);
+
+		String name = ctx.getText();
+		if (methodVar.containsKey(name))
+			values.put(ctx, methodVar.get(name));
+		else if (classVar.containsKey(name))
+			values.put(ctx, classVar.get(name));
+		else {
+			err(ctx.ID(), "'" + name + "' was not declared in this scope");
+			values.put(ctx, "wrong");
+		}
 	}
 
 	public static class ExpContext2 extends miniJavaParser.ExpContext {
@@ -744,6 +767,21 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			try{vast.get(i).getText();node.addChild(vast.get(i));}catch (NullPointerException e) {}
 		node.invokingState = _EXP;
 		vast.put(ctx, node);
+
+		String typeL = values.get(ctx.expression(0));
+		String typeR = values.get(ctx.expression(1));
+		if (typeL.equals("wrong") || typeR.equals("wrong")) {
+			values.put(ctx, "wrong");
+			return;
+		}
+		if ((typeL.equals("int") || typeL.equals("float")) && (typeR.equals("int") || typeR.equals("float"))) {
+			values.put(ctx, "float");
+			if (!typeL.equals(typeR))
+				warn(ctx.EXP(), "Implicit conversion between 'int' and 'float'");
+		}
+		else {
+			err(ctx.EXP(), "Invalid operands of type '" + typeL + "' and '" + typeR + "' to binary " + "^");
+		}
 	}
 
 	@Override public void enterEveryRule(ParserRuleContext ctx) {}
