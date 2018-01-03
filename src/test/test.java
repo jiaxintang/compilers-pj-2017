@@ -5,6 +5,10 @@ class test{
 }
 
 class Fuck {
+	int h;
+	int h;
+	Juck s;
+	Fuck e;
 	public int Haha(int num) {
 		int n;
 		int n;

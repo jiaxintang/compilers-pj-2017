@@ -21,7 +21,7 @@ srun:
 	$(compile) $(TASK)*.java;$(xrun) $(TASK) $(TESTFILE)
 
 run: $(CLASSFILE)
-	$(xrun) $(TASK) $(TESTFILE)
+	$(xrun) $(TASK) $(TESTFILE) gui
 
 tes: $(CLASSFILE) $(TESTCLASSFILE)
 	$(xrun) TestMiniJava $(TESTFILE)

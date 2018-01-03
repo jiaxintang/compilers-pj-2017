@@ -56,7 +56,7 @@ type
 
 statement
 	:BLP body BRP														#block
-	|'if' condition statement 'else' statement							#select
+	|IF condition statement 'else' statement							#select
 	|'while' condition statement										#while
 	|'System.out.println' LPR expr RPR SEMI						#output
 	|ID ASSIGN expr SEMI											#assign
@@ -109,6 +109,7 @@ COMMA : ',';
 BLP : '{';
 BRP : '}';
 RETURN : 'return';
+IF : 'if';
 
 BOOLEAN : 'true' | 'false' ;
 ID : [a-zA-Z][a-zA-Z0-9_]*;
