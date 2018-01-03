@@ -26,11 +26,15 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		String tab=new String();
 		for (int i = 0;i < deep;++ i)
 			tab+=' ';
-		System.out.println(tab + name);
 		deep += 1;
+		//System.out.println(tab + name);
 	}
-	void lv() {
+	void lv(ParseTree node) {
 		deep -= 1;
+		String tab = new String();
+		for (int i = 0;i < deep;++ i)
+			tab+=' ';
+		//System.out.println(tab + "lv" + node.getText());
 	}
 
 	public static final int
@@ -283,7 +287,13 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.addChild(vast.get(ctx.parameters()));
 		node.addChild(vast.get(ctx.varDecs()));
 		node.addChild(vast.get(ctx.body()));
-		node.addChild(vast.get(ctx.returnExpr()));
+		try {
+			vast.get(ctx.returnExpr()).getText();
+			node.addChild(vast.get(ctx.returnExpr()));
+		}
+		catch (NullPointerException e) {
+		}
+
 		node.invokingState = _METHODDECLARATION;
 		vast.put(ctx, node);
 	}
@@ -709,7 +719,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 	}
 
 	@Override public void enterEveryRule(ParserRuleContext ctx) {}
-	@Override public void exitEveryRule(ParserRuleContext ctx) {lv();}
+	@Override public void exitEveryRule(ParserRuleContext ctx) {lv(ctx);}
 	@Override public void visitTerminal(TerminalNode node) { }
 	@Override public void visitErrorNode(ErrorNode node) { }
 }

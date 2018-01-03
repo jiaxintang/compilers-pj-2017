@@ -3,19 +3,19 @@ grammar miniJava;
 goal: mainClass (classDeclaration)*;
 
 mainClass
-	:'class' ID '{' 
+	:'class' ID BLP 
 	'public' 'static' 'void' 'main' LPR 'String' '[' ']' ID RPR 
-	'{' statement '}' 
-	'}' 
+	BLP statement BRP 
+	BRP 
 	;
 
 classDeclaration
 	:'class' ID 
 	( 'extends' ID )? 
-	'{' 
+	BLP 
 	( varDeclaration )*
 	( methodDeclaration )* 
-	'}'
+	BRP
 	;
 
 varDeclaration
@@ -29,7 +29,10 @@ varDecs
 methodDeclaration
 	:'public' type ID 
 	LPR parameters RPR 
-	'{' varDecs body 'return' returnExpr SEMI '}' 
+	BLP varDecs body RETURN returnExpr SEMI BRP 
+	|'public' type ID
+	LPR parameters RPR
+	BLP varDecs body BRP { notifyErrorListeners("missing 'return' expression");}
 	;
 
 body
@@ -43,7 +46,7 @@ parameters
 returnExpr : expr;
 
 type
-	:ARRAY
+	:'int' '[' ']'
 	|'boolean'
 	|'String'
 	|'float'
@@ -52,7 +55,7 @@ type
 	;
 
 statement
-	:'{' body '}'														#block
+	:BLP body BRP														#block
 	|'if' condition statement 'else' statement							#select
 	|'while' condition statement										#while
 	|'System.out.println' LPR expr RPR SEMI						#output
@@ -90,23 +93,6 @@ expression
 	|LPR expression RPR													#paren
 	;
 
-
-BOOLEAN : 'true' | 'false' ;
-ID : [a-zA-Z][a-zA-Z0-9_]*;
-ARRAY : 'int' '['']' ;
-INT : [0-9]+;
-FLOAT 
-	: DIGIT+ DOT DIGIT*
-	| DOT DIGIT+
-	;
-STRING : '"' (ESC|.)*? '"' ;
-
-fragment
-DIGIT : [0-9] ;
-
-fragment
-ESC : '\\"' | '\\\\' ;
-
 MUL : '*';
 ADD : '+';
 SUB: '-';
@@ -120,6 +106,24 @@ SEMI : ';';
 EXP : '^';
 DOT : '.';
 COMMA : ',';
+BLP : '{';
+BRP : '}';
+RETURN : 'return';
+
+BOOLEAN : 'true' | 'false' ;
+ID : [a-zA-Z][a-zA-Z0-9_]*;
+INT : [0-9]+;
+FLOAT 
+	: DIGIT+ DOT DIGIT*
+	| DOT DIGIT+
+	;
+STRING : '"' (ESC|.)*? '"' ;
+
+fragment
+DIGIT : [0-9] ;
+
+fragment
+ESC : '\\"' | '\\\\' ;
 
 
 LINE_COMMENT : '//' .*? '\r'? '\n' -> skip;

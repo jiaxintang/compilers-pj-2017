@@ -3,7 +3,8 @@ miniJava-Compiler-FrontEnd
 # How to use it:
 ```
 cd src
-./run.sh $YOURFILE
+./run.sh $YOURFILE # 只编译
+./run.sh $YOURFILE gui # 编译并显示抽象语法树
 ```
 
 # 分工

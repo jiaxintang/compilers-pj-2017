@@ -9,7 +9,7 @@ class Fuck {
 		int n;
 		int n;
 		m = 1.1 + .2 * c[2].length.a()[4];
-		m = a3
+		m = a3;
 		if (a < 1)
 			m=1;
 		else
@@ -18,7 +18,10 @@ class Fuck {
 	}
 	public int hahaha() {
 		System.out.println("");
+		return a;
 	}
-
+	public int hahaha(int a) {
+		System.out.println("");
+	}
 }
 

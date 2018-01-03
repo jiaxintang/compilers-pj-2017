@@ -23,12 +23,22 @@ class miniJava {
 		miniJavaParser parser = new miniJavaParser(tokens);
 		ParseTree tree = parser.goal();
 
+		//System.out.println("ASDASASD");
 	
 		// create a standard ANTLR parse tree walker
 		ParseTreeWalker walker = new ParseTreeWalker();
 		// create listener then feed to walker
 		miniJavaLoader loader = new miniJavaLoader();
 		walker.walk(loader, tree);
+
+		boolean useGUI = false;
+		if (args.length > 1) {
+			if (args[1].equals("gui"))
+				useGUI = true;
+		}
+		if (!useGUI)
+			return;
+
 		ParseTree ast = loader.ast;
 
 		//show AST in console
@@ -74,6 +84,7 @@ class miniJava {
 		l.add("condition"); //35
 		l.add("float"); //36
 		l.add("expr(WRONG!)"); //37
+		l.add("string"); //37
 
 
 		//show AST in GUI
