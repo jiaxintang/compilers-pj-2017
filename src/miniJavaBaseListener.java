@@ -255,6 +255,18 @@ public class miniJavaBaseListener implements miniJavaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterString(miniJavaParser.StringContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitString(miniJavaParser.StringContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterMethod(miniJavaParser.MethodContext ctx) { }
 	/**
 	 * {@inheritDoc}

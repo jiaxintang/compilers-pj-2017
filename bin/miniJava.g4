@@ -43,7 +43,7 @@ parameters
 returnExpr : expr;
 
 type
-	:'int' '['']'
+	:ARRAY
 	|'boolean'
 	|'String'
 	|'float'
@@ -81,6 +81,7 @@ expression
 	|INT																#int
 	|FLOAT																#float
 	|BOOLEAN															#bool
+	|STRING																#string
 	|ID																	#id
 	|'this'																#this
 	|'new' 'int' '[' expression ']'										#newInt
@@ -92,6 +93,7 @@ expression
 
 BOOLEAN : 'true' | 'false' ;
 ID : [a-zA-Z][a-zA-Z0-9_]*;
+ARRAY : 'int' '['']' ;
 INT : [0-9]+;
 FLOAT 
 	: DIGIT+ DOT DIGIT*

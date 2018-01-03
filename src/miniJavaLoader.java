@@ -26,7 +26,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		String tab=new String();
 		for (int i = 0;i < deep;++ i)
 			tab+=' ';
-		//System.out.println(tab + name);
+		System.out.println(tab + name);
 		deep += 1;
 	}
 	void lv() {
@@ -46,7 +46,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		_NEWINT=27, _NEWID=28, _NOT=29, _PAREN=30,
 		_RETURNEXPR=31, _PARAMETERS=32, _VARDECS=33,
 		_BODY=34, _CONDITION=35, _FLOAT=36,
-		_EXPR=37;
+		_EXPR=37, _STRING=38;
 
 
 	boolean check(int left, int right, int exp_left, int exp_right)
@@ -76,7 +76,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		int stop = node.getSymbol().getStopIndex() - lineStart;
 
 		int sourceEnd = node.getSymbol().getInputStream().size();
-		String standardOutput = Integer.toString(line) + ":" + Integer.toString(start) + ": \033[31;1merror\033[0m";
+		String standardOutput = "line " + Integer.toString(line) + ":" + Integer.toString(start) + " \033[31;1merror\033[0m";
 		System.out.println(standardOutput + " : " + output);
 
 		String lineString = node.getSymbol().getInputStream().getText(new Interval(lineStart, sourceEnd-1)).split("\n|\r",2)[0];
@@ -101,7 +101,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		int stop = node.getSymbol().getStopIndex() - lineStart;
 
 		int sourceEnd = node.getSymbol().getInputStream().size();
-		String standardOutput = Integer.toString(line) + ":" + Integer.toString(start) + ": \033[31;1mwarning\033[0m";
+		String standardOutput = "line " + Integer.toString(line) + ":" + Integer.toString(start) + " \033[31;1mwarning\033[0m";
 		System.out.println(standardOutput + " : " + output);
 
 		String lineString = node.getSymbol().getInputStream().getText(new Interval(lineStart, sourceEnd-1)).split("\n|\r",2)[0];
@@ -202,12 +202,11 @@ public class miniJavaLoader extends miniJavaBaseListener {
 									lis.add(typeIter.getText());
 
 								// add method
-								String newName = combineMethod(methodName, lis);
-								if (now.containsKey(newName)) {
+								if (now.containsKey(methodName)) {
 									err(methodIter.ID(), "Function already declared");
 									continue;
 								}
-								now.put(newName, lis);
+								now.put(methodName, lis);
 							}
 							break;
 						}
@@ -615,6 +614,18 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		ParserRuleContext node = new FloatContext2(ctx);
 		node.copyFrom(ctx);
 		node.invokingState = _FLOAT;
+		vast.put(ctx, node);
+	}
+
+	public static class StringContext2 extends miniJavaParser.StringContext {
+		@Override public int getRuleIndex() {return _STRING;}
+		public StringContext2(miniJavaParser.ExpressionContext ctx) {super(ctx);}
+	}
+	@Override public void enterString(miniJavaParser.StringContext ctx) {common("string");}
+	@Override public void exitString(miniJavaParser.StringContext ctx) {
+		ParserRuleContext node = new StringContext2(ctx);
+		node.copyFrom(ctx);
+		node.invokingState = _STRING;
 		vast.put(ctx, node);
 	}
 

@@ -23,7 +23,6 @@ class miniJava {
 		miniJavaParser parser = new miniJavaParser(tokens);
 		ParseTree tree = parser.goal();
 
-
 	
 		// create a standard ANTLR parse tree walker
 		ParseTreeWalker walker = new ParseTreeWalker();
@@ -88,7 +87,7 @@ class miniJava {
 		else
 			viewer =new TreeViewer(Arrays.asList(
 					parser.getRuleNames()), tree);
-		//viewer.setScale(1.5);
+		viewer.setScale(1.5);
 		panel.add(viewer);
 		frame.add(viewer);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

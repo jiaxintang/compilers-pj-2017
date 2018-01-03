@@ -223,6 +223,18 @@ public interface miniJavaListener extends ParseTreeListener {
 	 */
 	void exitBool(miniJavaParser.BoolContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code string}
+	 * labeled alternative in {@link miniJavaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterString(miniJavaParser.StringContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code string}
+	 * labeled alternative in {@link miniJavaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitString(miniJavaParser.StringContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code method}
 	 * labeled alternative in {@link miniJavaParser#expression}.
 	 * @param ctx the parse tree
