@@ -58,9 +58,9 @@ statement
 	:BLP body BRP														#block
 	|IF condition statement 'else' statement							#select
 	|'while' condition statement										#while
-	|'System.out.println' LPR expr RPR SEMI						#output
-	|ID ASSIGN expr SEMI											#assign
-	|ID SLP expr SRP ASSIGN expr SEMI 						#arrayAssign
+	|'System.out.println' LPR expr RPR SEMI								#output
+	|ID ASSIGN expr SEMI												#assign
+	|ID SLP expr SRP ASSIGN expr SEMI 									#arrayAssign
 	;
 
 condition : LPR expr RPR;

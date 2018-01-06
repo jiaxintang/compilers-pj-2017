@@ -152,7 +152,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 				if (classType.get(s) < 10)
 					err(i.ID(0), "Class name illegal, '" + s + "' is reserved word");
 				else
-					err(i.ID(0), "CLASS '" + s + "' already exists");
+					err(i.ID(0), "Class '" + s + "' already exists");
 			}
 			else
 				classType.put(s, po++);
@@ -165,7 +165,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 				String start = i.ID(0).getSymbol().getText();
 				String s = i.ID(1).getSymbol().getText();
 				if (!Edge.containsKey((s))) {
-					err(i.ID(1), "Unknown type '" + s + "' found when extends");
+					err(i.ID(1), "Unknown class '" + s + "' found when extends");
 				}
 				else {
 					while (!s.equals("null") && !s.equals(start))
@@ -210,7 +210,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 
 								// add method
 								if (now.containsKey(methodName)) {
-									err(methodIter.ID(), "Function already declared");
+									err(methodIter.ID(), "Function name '" + methodName + "' already declared");
 									continue;
 								}
 								now.put(methodName, lis);
@@ -357,6 +357,21 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		try{vast.get(ctx.expr()).getText();node.addChild(vast.get(ctx.expr()));}catch (NullPointerException e) {}
 		node.invokingState = _CONDITION;
 		vast.put(ctx, node);
+
+		String type = values.get(ctx.expr());
+		if (type.equals("boolean"))
+			values.put(ctx, "boolean");
+		else if (type.equals("int") || type.equals("float")) {
+			warn(ctx.LPR(), "Implicit conversion from '" + type + "' to 'boolean'");
+			values.put(ctx, type);
+		}
+		else if (!type.equals("wrong")){
+			err(ctx.LPR(), "Condition expression needs 'boolean' expression");
+			values.put(ctx, "wrong");
+		}
+		else 
+			values.put(ctx, "wrong");
+
 	}
 
 	public static class BodyContext2 extends miniJavaParser.BodyContext {
@@ -371,6 +386,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			try{vast.get(i).getText();node.addChild(vast.get(i));}catch (NullPointerException e) {}
 		node.invokingState = _BODY;
 		vast.put(ctx, node);
+
+		values.put(ctx, "void");
 	}
 
 	public static class VarDecsContext2 extends miniJavaParser.VarDecsContext {
@@ -399,6 +416,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			try{vast.get(i).getText();node.addChild(vast.get(i));}catch (NullPointerException e) {}
 		node.invokingState = _PARAMETERS;
 		vast.put(ctx, node);
+
 	}
 
 	public static class ExprContext2 extends miniJavaParser.ReturnExprContext {
@@ -408,6 +426,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 	@Override public void enterExpr(miniJavaParser.ExprContext ctx) { common("parameters");}
 	@Override public void exitExpr(miniJavaParser.ExprContext ctx) {
 		vast.put(ctx, vast.get(ctx.expression()));
+
+		values.put(ctx, values.get(ctx.expression()));
 	}
 
 	public static class ReturnExprContext2 extends miniJavaParser.ReturnExprContext {
@@ -434,6 +454,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.addAnyChild(ctx.getChild(0));
 		node.invokingState = _TYPE;
 		vast.put(ctx, node);
+
+		values.put(ctx, "variableDefine");
 	}
 
 	public static class BlockContext2 extends miniJavaParser.BlockContext {
@@ -447,6 +469,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		try{vast.get(ctx.body()).getText();node.addChild(vast.get(ctx.body()));}catch (NullPointerException e) {}
 		node.invokingState = _BLOCK;
 		vast.put(ctx, node);
+
+		values.put(ctx, values.get(ctx.body()));
 	}
 
 	public static class SelectContext2 extends miniJavaParser.SelectContext {
@@ -462,6 +486,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			try{vast.get(i).getText();node.addChild(vast.get(i));}catch (NullPointerException e) {}
 		node.invokingState = _SELECT;
 		vast.put(ctx, node);
+
+		values.put(ctx, "void");
 	}
 
 	public static class WhileContext2 extends miniJavaParser.WhileContext {
@@ -476,6 +502,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		try{vast.get(ctx.statement()).getText();node.addChild(vast.get(ctx.statement()));}catch (NullPointerException e) {}
 		node.invokingState = _WHILE;
 		vast.put(ctx, node);
+
+		values.put(ctx, "void");
 	}
 
 	public static class OutputContext2 extends miniJavaParser.OutputContext {
@@ -489,6 +517,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		try{vast.get(ctx.expr()).getText();node.addChild(vast.get(ctx.expr()));}catch (NullPointerException e) {}
 		node.invokingState = _OUTPUT;
 		vast.put(ctx, node);
+
+		values.put(ctx, "void");
 	}
 
 	public static class AssignContext2 extends miniJavaParser.AssignContext {
@@ -502,6 +532,46 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		try{vast.get(ctx.expr()).getText();node.addChild(vast.get(ctx.expr()));}catch (NullPointerException e) {}
 		node.invokingState = _ASSIGN;
 		vast.put(ctx, node);
+
+		String name = ctx.ID().getSymbol().getText();
+		String typeL;
+		if (methodVar.containsKey(name)) {
+			typeL = methodVar.get(name);
+		}
+		else if (classVar.containsKey(name)) {
+			typeL = classVar.get(name);
+		}
+		else if (classType.containsKey(name))
+		{
+			err(ctx.ID(), "class '" + name + "' can't be a identifier");
+			values.put(ctx, "wrong");
+			return;
+		}
+		else
+		{
+			err(ctx.ID(), "'" + name + "' was not declared in this scope");
+			values.put(ctx, "wrong");
+			return;
+		}
+
+		String typeR = values.get(ctx.expr());
+
+		if (typeL.equals("wrong") || typeR.equals("wrong")) {
+			values.put(ctx, "wrong");
+			return;
+		}
+		if (typeL.equals(typeR)) {
+			values.put(ctx, typeL);
+		}
+		else if ((typeL.equals("int") || typeL.equals("float")) && (typeR.equals("int") || typeR.equals("float"))) {
+			values.put(ctx, typeL);
+			if (!typeL.equals(typeR))
+				warn(ctx.ASSIGN(), "Implicit conversion between 'int' and 'float'");
+		}
+		else {
+			err(ctx.ASSIGN(), "Invalid operands of type '" + typeL + "' and '" + typeR + "' to binary '='");
+			values.put(ctx, "wrong");
+		}
 	}
 
 	public static class ArrayAssignContext2 extends miniJavaParser.ArrayAssignContext {
@@ -516,6 +586,65 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			try{vast.get(i).getText();node.addChild(vast.get(i));}catch (NullPointerException e) {}
 		node.invokingState = _ARRAYASSIGN;
 		vast.put(ctx, node);
+
+		String name = ctx.ID().getSymbol().getText();
+		String typeL;
+		if (methodVar.containsKey(name)) {
+			typeL = methodVar.get(name);
+			if (!typeL.equals("int[]"))
+			{
+				err(ctx.ID(), "'" + name + "' is not an array");
+				values.put(ctx, "wrong");
+				return;
+			}
+		}
+		else if (classVar.containsKey(name)) {
+			typeL = classVar.get(name);
+			if (!typeL.equals("int[]"))
+			{
+				err(ctx.ID(), "'" + name + "' is not an array");
+				values.put(ctx, "wrong");
+				return;
+			}
+		}
+		else if (classType.containsKey(name))
+		{
+			err(ctx.ID(), "class '" + name + "' can't be a identifier");
+			values.put(ctx, "wrong");
+			return;
+		}
+		else
+		{
+			err(ctx.ID(), "'" + name + "' was not declared in this scope");
+			values.put(ctx, "wrong");
+			return;
+		}
+		String index = values.get(ctx.expr(0));
+		if (!index.equals("int")) {
+			err(ctx.ID(), "index of array should be 'int', not '" + index + "'");
+			values.put(ctx, "wrong");
+			return;
+		}
+		typeL = typeL.substring(0, typeL.length()-2);
+
+		String typeR = values.get(ctx.expr(1));
+		if (typeL.equals("wrong") || typeR.equals("wrong")) {
+			values.put(ctx, "wrong");
+			return;
+		}
+		if (typeL.equals(typeR)) {
+			values.put(ctx, typeL);
+		}
+		else if ((typeL.equals("int") || typeL.equals("float")) && (typeR.equals("int") || typeR.equals("float"))) {
+			values.put(ctx, typeL);
+			if (!typeL.equals(typeR))
+				warn(ctx.ASSIGN(), "Implicit conversion between 'int' and 'float'");
+		}
+		else {
+			err(ctx.ASSIGN(), "Invalid operands of type '" + typeL + "' and '" + typeR + "' to binary '='");
+			values.put(ctx, "wrong");
+		}
+	
 	}
 
 	public static class AccessContext2 extends miniJavaParser.AccessContext {
@@ -538,7 +667,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			return;
 		}
 		if (typeL.substring(typeL.length()-1, typeL.length()).equals("]") && typeR.equals("int")) {
-			values.put(ctx, typeL.substring(0,typeL.length()-1));
+			values.put(ctx, typeL.substring(0,typeL.length()-2));
 		}
 		else if (!typeR.equals("int")) {
 			err(ctx.SLP(), "Invalid types '" + typeL + typeR + "' for array subscript");

@@ -10,7 +10,7 @@ antlr4=java -jar ./antlr-4.7.1-complete.jar
 compile=javac -cp .:./antlr-4.7.1-complete.jar:$(CLASSPATH)
 grun=java -cp .:./antlr-4.7.1-complete.jar:$(CLASSPATH) org.antlr.v4.gui.TestRig
 xrun=java -cp .:./antlr-4.7.1-complete.jar:$(CLASSPATH)
-TESTFILE = test/test.java
+TESTFILE = errorTest/test.java
 CONFIG = 
 COMMAND = 
 
