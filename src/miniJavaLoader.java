@@ -141,7 +141,8 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		classType.put("float", 2);
 		classType.put("String", 3);
 		classType.put("boolean", 4);
-		classType.put("int[", 5);
+		classType.put("int[]", 5);
+
 		int po = 10;
 		HashMap<String, String> Edge = new HashMap<String, String>();
 		for (miniJavaParser.ClassDeclarationContext i: ctx.classDeclaration()) {
@@ -254,10 +255,10 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		public ClassDeclarationContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
 	}
 	@Override public void enterClassDeclaration(miniJavaParser.ClassDeclarationContext ctx) { 
+		classPrefix = ctx.ID(0).getSymbol().getText();
 		for (miniJavaParser.VarDeclarationContext i : ctx.varDeclaration()) {
 			String type = i.type().getText();
 			String name = i.ID().getSymbol().getText();
-			classPrefix = name;
 			if (classVar.containsKey(name)) {
 				err(i.ID(), "redefinition of '" + type + " " + name + "'");
 			}
@@ -301,6 +302,22 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		public MethodDeclarationContext2(ParserRuleContext ctx, int invokingState) {super(ctx, invokingState);}
 	}
 	@Override public void enterMethodDeclaration(miniJavaParser.MethodDeclarationContext ctx) {
+		
+		miniJavaParser.ParametersContext params = ctx.parameters();
+		int paramN = params.ID().size();
+		for (int i = 0;i < paramN;++ i) {
+			String type = params.type(i).getText();
+			String name = params.ID(i).getSymbol().getText();
+			if (methodVar.containsKey(name)) {
+				err(params.ID(i), "redefinition of '" + type + " " + name + "'");
+			}
+			else if (!classType.containsKey(type)) {
+				err(params.ID(i), "'" + type + "' was not declare in the scope");
+			}
+			else
+				methodVar.put(name, type);
+		}
+
 		for (miniJavaParser.VarDeclarationContext i : ctx.varDecs().varDeclaration()) {
 			String type = i.type().getText();
 			String name = i.ID().getSymbol().getText();
@@ -520,14 +537,14 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			values.put(ctx, "wrong");
 			return;
 		}
-		if (typeL.substring(typeL.length()-1, typeL.length()).equals("[") && typeR.equals("int")) {
+		if (typeL.substring(typeL.length()-1, typeL.length()).equals("]") && typeR.equals("int")) {
 			values.put(ctx, typeL.substring(0,typeL.length()-1));
 		}
 		else if (!typeR.equals("int")) {
-			err(ctx.SLP(), "Invalid types '" + typeL + typeR + ']' + "' for array subscript");
+			err(ctx.SLP(), "Invalid types '" + typeL + typeR + "' for array subscript");
 			values.put(ctx, "wrong");
 		}
-		else if (typeL.substring(typeL.length()-1, typeL.length()).equals("[")) {
+		else if (typeL.substring(typeL.length()-1, typeL.length()).equals("]")) {
 			err(ctx.SLP(), "Invalid array access for type '" + typeL + "'");
 			values.put(ctx, "wrong");
 		}
@@ -567,7 +584,6 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.invokingState = _METHOD;
 		vast.put(ctx, node);
 
-		// TODO
 		String type;
 		for (miniJavaParser.ExpressionContext i: ctx.expression()) {
 			type = values.get(i);
@@ -591,11 +607,27 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		ArrayList<String> params = new ArrayList<String>();
 
 		int expN = ctx.expression().size();
+		int paramN = func.size();
 		for (int i = 1;i < expN;++ i)
 		{
 			String paramType = values.get(ctx.expression(i));
 			params.add(paramType);
 		}
+
+		if (expN != paramN)
+		{
+			String myParam = "";
+			String expParam = "";
+			for (int j = 1;j < expN;++ j)
+				myParam += "'" + params.get(j-1) + "'";
+			for (int j = 1;j < paramN;++ j)
+				expParam += "'" + func.get(j) + "'";
+			err(ctx.ID(), "function '" + funcName + "' expect " + expParam + ". but " + myParam + " got");
+			values.put(ctx, "wrong");
+			return;
+		}
+
+
 
 		for (int i = 1;i < expN;++ i)
 			if (!func.get(i).equals(params.get(i-1)))
@@ -603,16 +635,15 @@ public class miniJavaLoader extends miniJavaBaseListener {
 				String myParam = "";
 				String expParam = "";
 				for (int j = 1;j < expN;++ j)
-				{
-					myParam += "'" + params.get(i-1) + "'";
-					expParam += "'" + func.get(i) + "'";
-				}
+					myParam += "'" + params.get(j-1) + "'";
+				for (int j = 1;j < paramN;++ j)
+					expParam += "'" + func.get(j) + "'";
 				err(ctx.ID(), "function '" + funcName + "' expect " + expParam + ". but " + myParam + " got");
 				values.put(ctx, "wrong");
 				return;
 			}
 
-		values.put(ctx, params.get(0));
+		values.put(ctx, func.get(0));
 	}
 
 	public static class MulContext2 extends miniJavaParser.MulContext {
@@ -635,7 +666,10 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			return;
 		}
 		if ((typeL.equals("int") || typeL.equals("float")) && (typeR.equals("int") || typeR.equals("float"))) {
-			values.put(ctx, "float");
+			if (typeL.equals("float") || typeR.equals("float"))
+				values.put(ctx, "float");
+			else
+				values.put(ctx, "int");
 			if (!typeL.equals(typeR))
 				warn(ctx.MUL(), "Implicit conversion between 'int' and 'float'");
 		}
@@ -679,6 +713,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		if (classType.containsKey(classPrefix))
 			values.put(ctx, classPrefix);
 		else {
+			err(ctx.THIS(), classPrefix);
 			err(ctx.THIS(), "Invalid use of 'this'");
 			values.put(ctx, "wrong");
 		}
@@ -703,8 +738,10 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			values.put(ctx, "wrong");
 			return;
 		}
-		if ((typeL.equals("boolean") ) && (typeR.equals("boolean"))) {
+		if ((typeL.equals("int") || typeL.equals("float")) && (typeR.equals("int") || typeR.equals("float"))) {
 			values.put(ctx, "boolean");
+			if (!typeL.equals(typeR))
+				warn(ctx.LT(), "Implicit conversion between 'int' and 'float'");
 		}
 		else {
 			err(ctx.LT(), "Invalid operands of type '" + typeL + "' and '" + typeR + "' to binary " + "<");
@@ -729,7 +766,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			values.put(ctx, "wrong");
 			return;
 		}
-		if (type.substring(type.length()-1, type.length()).equals("[")) {
+		if (type.substring(type.length()-1, type.length()).equals("]")) {
 			values.put(ctx, "int");
 		}
 		else {
@@ -759,7 +796,10 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			return;
 		}
 		if ((typeL.equals("int") || typeL.equals("float")) && (typeR.equals("int") || typeR.equals("float"))) {
-			values.put(ctx, "float");
+			if (typeL.equals("float") || typeR.equals("float"))
+				values.put(ctx, "float");
+			else
+				values.put(ctx, "int");
 			if (!typeL.equals(typeR))
 				warn(op, "Implicit conversion between 'int' and 'float'");
 		}
@@ -788,8 +828,10 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			values.put(ctx, "wrong");
 			return;
 		}
-		if ((typeL.equals("boolean") ) && (typeR.equals("boolean"))) {
+		if ((typeL.equals("int")||typeL.equals("float") ) && (typeR.equals("int")||typeR.equals("float"))) {
 			values.put(ctx, "boolean");
+			if (!typeL.equals(typeR))
+				warn(ctx.EQ(), "Implicit conversion between 'int' and 'float'");
 		}
 		else {
 			err(ctx.EQ(), "Invalid operands of type '" + typeL + "' and '" + typeR + "' to binary " + "==");
@@ -873,7 +915,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 		node.invokingState = _PAREN;
 		vast.put(ctx, node);
 
-		values.put(ctx, values.get(ctx));
+		values.put(ctx, values.get(ctx.expression()));
 	}
 
 	public static class NewIntContext2 extends miniJavaParser.NewIntContext {
@@ -890,7 +932,7 @@ public class miniJavaLoader extends miniJavaBaseListener {
 
 		String type = values.get(ctx.expression());
 		if (type.equals("int")) {
-			values.put(ctx, "int[");
+			values.put(ctx, "int[]");
 		}
 		else {
 			err(ctx.SLP(), "Expression in '[]' should be int");
@@ -974,7 +1016,10 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			return;
 		}
 		if ((typeL.equals("int") || typeL.equals("float")) && (typeR.equals("int") || typeR.equals("float"))) {
-			values.put(ctx, "float");
+			if (typeL.equals("float") || typeR.equals("float"))
+				values.put(ctx, "float");
+			else
+				values.put(ctx, "int");
 			if (!typeL.equals(typeR))
 				warn(ctx.EXP(), "Implicit conversion between 'int' and 'float'");
 		}
