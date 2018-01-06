@@ -15,7 +15,7 @@ CONFIG =
 COMMAND = 
 
 all:
-	$(xrun) $(TASK) $(TESTFILE)
+	$(antlr4) $(TASK).g4;$(compile) $(TASK)*.java
 
 srun:
 	$(compile) $(TASK)*.java;$(xrun) $(TASK) $(TESTFILE)
@@ -52,6 +52,11 @@ gen: $(SRC)
 
 .PHONY: clean
 clean:
+	cp miniJava.java ..
+	cp miniJavaLoader.java ..
 	-@rm -rf $(CLASSFILE) $(JAVAFILE) *.tokens *.interp
+	mv ../miniJava.java .
+	mv ../miniJavaLoader.java .
+
 
 
