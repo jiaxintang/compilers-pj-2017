@@ -8,11 +8,4 @@ class A{
 		return a;
 	}
 }
-class B extends A{
-	int a;
-	public int f() {
-		return a;
-	}
-}
-class D extends C{}
 
