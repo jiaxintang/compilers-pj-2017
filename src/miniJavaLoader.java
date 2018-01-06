@@ -576,15 +576,43 @@ public class miniJavaLoader extends miniJavaBaseListener {
 				return;
 			}
 		}
-		boolean getClass = false;
-		for (miniJavaParser.ExpressionContext i: ctx.expression()) {
-			type = values.get(i);
-			if (!getClass) {
-				getClass = true;
-			}
 
+		String name = values.get(ctx.expression(0));
+		String funcName = ctx.ID().getSymbol().getText();
+
+		HashMap<String, ArrayList<String> > funcs = methods.get(name);
+		if (!funcs.containsKey(funcName))
+		{
+			err(ctx.ID(), "class '" + name + "' has no member named '" + funcName + "'");
+			values.put(ctx, "wrong");
+			return;
+		}
+		ArrayList<String> func = funcs.get(funcName);
+		ArrayList<String> params = new ArrayList<String>();
+
+		int expN = ctx.expression().size();
+		for (int i = 1;i < expN;++ i)
+		{
+			String paramType = values.get(ctx.expression(i));
+			params.add(paramType);
 		}
 
+		for (int i = 1;i < expN;++ i)
+			if (!func.get(i).equals(params.get(i-1)))
+			{
+				String myParam = "";
+				String expParam = "";
+				for (int j = 1;j < expN;++ j)
+				{
+					myParam += "'" + params.get(i-1) + "'";
+					expParam += "'" + func.get(i) + "'";
+				}
+				err(ctx.ID(), "function '" + funcName + "' expect " + expParam + ". but " + myParam + " got");
+				values.put(ctx, "wrong");
+				return;
+			}
+
+		values.put(ctx, params.get(0));
 	}
 
 	public static class MulContext2 extends miniJavaParser.MulContext {
@@ -914,7 +942,13 @@ public class miniJavaLoader extends miniJavaBaseListener {
 			values.put(ctx, methodVar.get(name));
 		else if (classVar.containsKey(name))
 			values.put(ctx, classVar.get(name));
-		else {
+		else if (classType.containsKey(name))
+		{
+			err(ctx.ID(), "class '" + name + "' can't be a identifier");
+			values.put(ctx, "wrong");
+		}
+		else
+		{
 			err(ctx.ID(), "'" + name + "' was not declared in this scope");
 			values.put(ctx, "wrong");
 		}
